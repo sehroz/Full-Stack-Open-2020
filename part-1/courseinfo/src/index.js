@@ -9,16 +9,19 @@ const Content = (props) => {
   const { part1, exercises1, part2, exercises2, part3, exercises3 } = props;
   return (
     <>
-      <p>
-        {part1} {exercises1}
-      </p>
-      <p>
-        {part2} {exercises2}
-      </p>
-      <p>
-        {part3} {exercises3}
-      </p>
+      <Part part={part1} excercise={exercises1} />
+      <Part part={part2} excercise={exercises2} />
+      <Part part={part3} excercise={exercises3} />
     </>
+  );
+};
+
+const Part = (props) => {
+  const { part, excercise } = props;
+  return (
+    <p>
+      {part} {excercise}
+    </p>
   );
 };
 
@@ -40,7 +43,6 @@ const App = () => {
   return (
     <div>
       <Header course={course} />
-
       <Content
         part1={part1}
         exercises1={exercises1}
