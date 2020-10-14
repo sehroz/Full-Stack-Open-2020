@@ -6,21 +6,32 @@ const Stats = ({ good, bad, neutral }) => {
   const avg = (good + bad * -1) / all;
   const pos = (good / all) * 100;
 
-  if (all == 0) {
+  if (all === 0) {
     return <p>No feedback given</p>;
   }
 
   return (
     <>
-      <p>good {good}</p>
-      <p>neutral {neutral}</p>
-      <p>bad {bad}</p>
-      <p>all {all}</p>
-      <p>average {avg}</p>
-      <p>positive {pos} %</p>
+      <Statistic name="good" value={good} />
+      <Statistic name="neutral" value={neutral} />
+      <Statistic name="bad" value={bad} />
+      <Statistic name="avgerage" value={avg} />
+      <Statistic name="pos" value={pos} />
     </>
   );
 };
+
+const Statistic = ({ name, value }) => {
+  return (
+    <p>
+      {name} {value} {name === "pos" ? "%" : null}
+    </p>
+  );
+};
+
+const Button = (props) => (
+  <button onClick={props.handleVote(props.name)}> {props.name}</button>
+);
 
 const App = () => {
   const [good, setGood] = useState(0);
@@ -41,9 +52,9 @@ const App = () => {
     <>
       <div>
         <h1>give feedback</h1>
-        <button onClick={handleVote("good")}>good</button>
-        <button onClick={handleVote("neutral")}>neutral</button>
-        <button onClick={handleVote("bad")}>bad</button>
+        <Button handleVote={handleVote} name="good" />
+        <Button handleVote={handleVote} name="neutral" />
+        <Button handleVote={handleVote} name="bad" />
       </div>
       <div>
         <h1>statistics</h1>
