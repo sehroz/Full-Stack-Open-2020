@@ -28,8 +28,16 @@ const App = (props) => {
         <button onClick={handleVote}>vote</button>
         <button onClick={nextAnec}>next anecdote</button>
       </div>
+      <h1>Anecdote with most votes</h1>
+      <MostVotes vote={vote} />
     </div>
   );
+};
+
+const MostVotes = ({ vote }) => {
+  const sortedVotes = Object.keys(vote).sort((a, b) => vote[b] - vote[a])[0];
+  const mostVoted = anecdotes[sortedVotes];
+  return <p>{mostVoted}</p>;
 };
 
 const anecdotes = [
