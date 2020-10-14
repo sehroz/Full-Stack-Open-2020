@@ -11,21 +11,26 @@ const Stats = ({ good, bad, neutral }) => {
   }
 
   return (
-    <>
+    <table>
       <Statistic name="good" value={good} />
       <Statistic name="neutral" value={neutral} />
       <Statistic name="bad" value={bad} />
       <Statistic name="avgerage" value={avg} />
       <Statistic name="pos" value={pos} />
-    </>
+    </table>
   );
 };
 
 const Statistic = ({ name, value }) => {
   return (
-    <p>
-      {name} {value} {name === "pos" ? "%" : null}
-    </p>
+    <tbody>
+      <tr>
+        <td>{name}</td>
+        <td>
+          {value} {name === "pos" ? "%" : null}
+        </td>
+      </tr>
+    </tbody>
   );
 };
 
