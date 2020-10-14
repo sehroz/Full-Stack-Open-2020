@@ -3,12 +3,15 @@ import ReactDOM from "react-dom";
 
 const Stats = ({ good, bad, neutral }) => {
   const all = good + neutral + bad;
-  const avg = all > 0 ? (good + bad * -1) / all : 0;
-  const pos = all > 0 ? (good / all) * 100 : 0;
+  const avg = (good + bad * -1) / all;
+  const pos = (good / all) * 100;
+
+  if (all == 0) {
+    return <p>No feedback given</p>;
+  }
 
   return (
     <>
-      <h1>statistics</h1>
       <p>good {good}</p>
       <p>neutral {neutral}</p>
       <p>bad {bad}</p>
@@ -24,7 +27,7 @@ const App = () => {
   const [neutral, setNeutral] = useState(0);
   const [bad, setBad] = useState(0);
 
-  const handleVote = ({ setVote }) => () => {
+  const handleVote = (setVote) => () => {
     return setVote === "good"
       ? setGood(good + 1)
       : setVote === "neutral"
@@ -43,6 +46,7 @@ const App = () => {
         <button onClick={handleVote("bad")}>bad</button>
       </div>
       <div>
+        <h1>statistics</h1>
         <Stats good={good} bad={bad} neutral={neutral} />
       </div>
     </>
