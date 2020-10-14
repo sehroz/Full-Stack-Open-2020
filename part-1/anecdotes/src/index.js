@@ -20,10 +20,11 @@ const App = (props) => {
 
   return (
     <div>
+      <h1>Anecdote of the day</h1>
       {props.anecdotes[selected]}
-      <div>
-        <p>has {voteCount} votes</p>
-      </div>
+
+      <p>has {voteCount} votes</p>
+
       <div>
         <button onClick={handleVote}>vote</button>
         <button onClick={nextAnec}>next anecdote</button>
@@ -37,7 +38,14 @@ const App = (props) => {
 const MostVotes = ({ vote }) => {
   const sortedVotes = Object.keys(vote).sort((a, b) => vote[b] - vote[a])[0];
   const mostVoted = anecdotes[sortedVotes];
-  return <p>{mostVoted}</p>;
+  return (
+    <>
+      <p>{mostVoted}</p>
+      <p>
+        has {vote[sortedVotes] === undefined ? "no" : vote[sortedVotes]} votes
+      </p>
+    </>
+  );
 };
 
 const anecdotes = [
