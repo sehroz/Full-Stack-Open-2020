@@ -3,11 +3,13 @@ import React, { useState } from "react";
 const App = () => {
   const [persons, setPersons] = useState([{ name: "Arto Hellas" }]);
   const [newName, setNewName] = useState("");
+  const [newNumber, setNewNumber] = useState("");
 
   const addPerson = (e) => {
     e.preventDefault();
     const newPerson = {
       name: newName,
+      number: newNumber,
     };
 
     persons.find((person) => person.name === newName)
@@ -16,7 +18,11 @@ const App = () => {
   };
 
   const handleInput = (e) => {
-    setNewName(e.target.value);
+    return e.target.name === "name"
+      ? setNewName(e.target.value)
+      : e.target.name === "number"
+      ? setNewNumber(e.target.value)
+      : null;
   };
 
   return (
@@ -24,7 +30,11 @@ const App = () => {
       <h2>Phonebook</h2>
       <form onSubmit={addPerson}>
         <div>
-          name: <input value={newName} onChange={handleInput} />
+          name: <input value={newName} onChange={handleInput} name="name" />
+        </div>
+        <div>
+          number:{" "}
+          <input value={newNumber} onChange={handleInput} name="number" />
         </div>
         <div>
           <button type="submit">add</button>
@@ -32,7 +42,9 @@ const App = () => {
       </form>
       <h2>Numbers</h2>
       {persons.map((person) => (
-        <p key={person.name}>{person.name}</p>
+        <p key={person.name}>
+          {person.name} {person.number}
+        </p>
       ))}
     </div>
   );
