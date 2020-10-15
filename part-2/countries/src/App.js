@@ -53,6 +53,19 @@ const ShowCountries = ({ countries, search }) => {
 };
 
 const CountryData = ({ country }) => {
+  const [weather, setWeather] = useState({});
+
+  useEffect(() => {
+    () => {
+      axios
+        .get(
+          `https://api.weatherstack.com/current?access_key=${REACT_APP_API_KEY}&query=${country.capital}`
+        )
+        .then((res) => {
+          setWeather(res.data);
+        });
+    };
+  }, []);
   return (
     <div key={country.name}>
       <h1> {country.name} </h1>
@@ -71,6 +84,18 @@ const CountryData = ({ country }) => {
           style={{ height: "100px", width: "auto" }}
         />
       </div>
+      <h2>Weather in {country.capital}</h2>
+      <p>
+        <b>temperature:</b>
+        {weather.current.temperature}
+      </p>
+      <img
+        src={weather.current.weather_icons}
+        alt={current.weather.weather_descriptions}
+      />
+      <p>
+        <b>wind:</b> {weather.current.wind_speed} mph
+      </p>
     </div>
   );
 };
