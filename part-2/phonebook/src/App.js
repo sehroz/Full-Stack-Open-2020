@@ -25,9 +25,25 @@ const App = () => {
       number: newNumber,
     };
 
-    if (persons.find((person) => person.name === newName)) {
-      alert(`${newName} is already added to phonebook`);
-    } else {
+    if (
+      persons.find(
+        (person) =>
+          person.name === newPerson.name && person.number !== newPerson.number
+      )
+    ) {
+      return window.confirm(
+        `${newPerson.name} is already added to phonebook, replace the old number with a new one?`
+      )
+        ? updatePerson(newPerson)
+        : null;
+    } else if (
+      persons.find(
+        (person) =>
+          person.name === newPerson.name && person.number === newPerson.number
+      )
+    ) {
+      alert("Please change number to update this person.");
+    } else
       personService
         .createPerson(newPerson)
         .then((returnedPerson) => {
@@ -37,7 +53,6 @@ const App = () => {
         .catch((err) =>
           console.log(`Cannot add person ${newPerson.name}`, err)
         );
-    }
   };
 
   const deletePerson = (name, id) => {
@@ -47,6 +62,20 @@ const App = () => {
           .then(setPersons(persons.filter((person) => person.id !== id)))
           .catch((err) => console.log(`Cannot delete person ${name}`, err))
       : null;
+  };
+
+  const updatePerson = (newPerson) => {
+    const person = persons.find((person) => person.name === newPerson.name);
+
+    const changedPerson = { ...person, number: newPerson.number };
+
+    personService.updatePerson(changedPerson).then((returnedPerson) => {
+      setPersons(
+        persons.map((person) =>
+          person.id !== changedPerson.id ? person : returnedPerson
+        )
+      );
+    });
   };
 
   const handleInput = (e) => {
