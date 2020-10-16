@@ -12,7 +12,10 @@ const App = () => {
   const [filterInput, setFilterInput] = useState("");
 
   useEffect(() => {
-    personService.getAll().then((initialPersons) => setPersons(initialPersons));
+    personService
+      .getAll()
+      .then((initialPersons) => setPersons(initialPersons))
+      .catch((err) => console.log("Cannot connect", err));
   }, []);
 
   const addPerson = (e) => {
@@ -31,8 +34,19 @@ const App = () => {
           setPersons([...persons, returnedPerson]);
           setNewNumber("");
         })
-        .catch(`Cannot add person ${newPerson.name}`);
+        .catch((err) =>
+          console.log(`Cannot add person ${newPerson.name}`, err)
+        );
     }
+  };
+
+  const deletePerson = (name, id) => {
+    return window.confirm(`Delete ${name}?`)
+      ? personService
+          .deletePerson(id)
+          .then(setPersons(persons.filter((person) => person.id !== id)))
+          .catch((err) => console.log(`Cannot delete person ${name}`, err))
+      : null;
   };
 
   const handleInput = (e) => {
@@ -71,7 +85,7 @@ const App = () => {
 
       <h3>Numbers</h3>
 
-      <Persons list={list} />
+      <Persons list={list} deletePerson={deletePerson} />
     </div>
   );
 };
