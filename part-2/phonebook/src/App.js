@@ -14,6 +14,7 @@ const App = () => {
       .get("http://localhost:3001/persons")
       .then((res) => setPersons(res.data));
   }, []);
+
   const addPerson = (e) => {
     e.preventDefault();
     const newPerson = {
@@ -21,10 +22,14 @@ const App = () => {
       number: newNumber,
     };
 
-    persons.find((person) => person.name === newName)
-      ? alert(`${newName} is already added to phonebook`)
-      : setPersons([...persons, newPerson]);
-
+    if (persons.find((person) => person.name === newName)) {
+      alert(`${newName} is already added to phonebook`);
+    } else {
+      axios
+        .post(`http://localhost:3001/persons`, newPerson)
+        .then((res) => setPersons([...persons, res.data]))
+        .catch(`Cannot add person ${newPerson.name}`);
+    }
     setNewNumber("");
   };
 
