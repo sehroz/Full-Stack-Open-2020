@@ -17,7 +17,10 @@ const App = () => {
     personService
       .getAll()
       .then((initialPersons) => setPersons(initialPersons))
-      .catch((err) => console.log("Cannot connect", err));
+      .catch((err) => {
+        setMsg({ msg: `Did not get people list: ${err}`, type: "success" });
+        setTimeout(() => setMsg(null), 5000);
+      });
   }, []);
 
   const addPerson = (e) => {
@@ -50,13 +53,14 @@ const App = () => {
         .createPerson(newPerson)
         .then((returnedPerson) => {
           setPersons([...persons, returnedPerson]);
-          setMsg(`Added ${returnedPerson.name}`);
+          setMsg({ msg: `Added ${returnedPerson.name}`, type: "success" });
           setTimeout(() => setMsg(null), 5000);
           setNewNumber("");
         })
-        .catch((err) =>
-          console.log(`Cannot add person ${newPerson.name}`, err)
-        );
+        .catch(() => {
+          setMsg({ msg: `Cannot add person ${newPerson.name}`, type: "fail" });
+          setTimeout(() => setMsg(null), 5000);
+        });
   };
 
   const deletePerson = (name, id) => {
@@ -65,10 +69,17 @@ const App = () => {
           .deletePerson(id)
           .then(() => {
             setPersons(persons.filter((person) => person.id !== id));
-            setMsg(`${name} deleted`);
+            setMsg({ msg: `${name} deleted`, type: "success" });
             setTimeout(() => setMsg(null), 5000);
           })
-          .catch((err) => console.log(`Cannot delete person ${name}`, err))
+          .catch(() => {
+            setMsg({
+              msg: `Information of ${name} has already been removed from server`,
+              type: "fail",
+            });
+            setTimeout(() => setMsg(null), 5000);
+            setPersons(persons.filter((person) => person.id !== id));
+          })
       : null;
   };
 

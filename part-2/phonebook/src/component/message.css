@@ -11,3 +11,8 @@
   color: green;
   border-color: green;
 }
+
+.fail {
+  color: red;
+  border-color: red;
+}
