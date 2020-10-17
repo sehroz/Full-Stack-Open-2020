@@ -4,12 +4,14 @@ import Filter from "./component/Filter";
 import PersonForm from "./component/PersonForm";
 import Persons from "./component/Persons";
 import personService from "./services/persons";
+import Msg from "./component/Msg";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filterInput, setFilterInput] = useState("");
+  const [msg, setMsg] = useState(null);
 
   useEffect(() => {
     personService
@@ -48,6 +50,8 @@ const App = () => {
         .createPerson(newPerson)
         .then((returnedPerson) => {
           setPersons([...persons, returnedPerson]);
+          setMsg(`Added ${returnedPerson.name}`);
+          setTimeout(() => setMsg(null), 5000);
           setNewNumber("");
         })
         .catch((err) =>
@@ -59,7 +63,11 @@ const App = () => {
     return window.confirm(`Delete ${name}?`)
       ? personService
           .deletePerson(id)
-          .then(setPersons(persons.filter((person) => person.id !== id)))
+          .then(() => {
+            setPersons(persons.filter((person) => person.id !== id));
+            setMsg(`${name} deleted`);
+            setTimeout(() => setMsg(null), 5000);
+          })
           .catch((err) => console.log(`Cannot delete person ${name}`, err))
       : null;
   };
@@ -75,6 +83,10 @@ const App = () => {
           person.id !== changedPerson.id ? person : returnedPerson
         )
       );
+      setMsg(
+        `Number changed for ${changedPerson.name} to ${changedPerson.number}`
+      );
+      setTimeout(() => setMsg(null), 5000);
     });
   };
 
@@ -100,7 +112,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-
+      <Msg msg={msg} />
       <Filter filterInput={filterInput} handleFilter={handleFilter} />
 
       <h3>Add a new</h3>
