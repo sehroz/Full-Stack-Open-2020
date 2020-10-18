@@ -2,6 +2,7 @@ const { response } = require("express");
 const express = require("express");
 const app = express();
 const PORT = 3001;
+
 let peopleDB = [
   {
     name: "Arto Hellas",
@@ -25,6 +26,7 @@ let peopleDB = [
   },
 ];
 
+app.use(express.json());
 app.get("/api/persons", (req, res) => {
   res.json(peopleDB);
 });
@@ -54,6 +56,27 @@ app.delete("/api/persons/:id", (req, res) => {
 
   res.status(204).end();
 });
+
+const generateID = () => {
+  const newId = Math.floor(Math.random() * 1000000);
+
+  return newId;
+};
+
+app.post("/api/persons", (req, res) => {
+  const body = req.body;
+
+  const person = {
+    name: body.name,
+    number: body.number,
+    id: generateID(),
+  };
+
+  peopleDB = peopleDB.concat(person);
+
+  res.json(person);
+});
+
 app.listen(PORT, () => {
   console.log(`Server on:${PORT}`);
 });
