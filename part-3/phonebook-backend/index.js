@@ -4,6 +4,11 @@ const morgan = require("morgan");
 const app = express();
 const PORT = 3001;
 
+morgan.token("data", function getId(req) {
+  const data = JSON.stringify(req.body);
+  return data;
+});
+
 let peopleDB = [
   {
     name: "Arto Hellas",
@@ -27,7 +32,10 @@ let peopleDB = [
   },
 ];
 
-app.use(express.json(), morgan("tiny"));
+app.use(
+  express.json(),
+  morgan(":method :url :status :res[content-length] - :response-time ms :data")
+);
 app.get("/api/persons", (req, res) => {
   res.json(peopleDB);
 });
