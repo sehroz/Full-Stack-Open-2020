@@ -1,5 +1,6 @@
 const { response } = require("express");
 const express = require("express");
+const cors = require("cors");
 const morgan = require("morgan");
 const app = express();
 const PORT = 3001;
@@ -33,6 +34,8 @@ let peopleDB = [
 ];
 
 app.use(
+  cors(),
+  express.static("build"),
   express.json(),
   morgan(":method :url :status :res[content-length] - :response-time ms :data")
 );
@@ -74,7 +77,7 @@ const generateID = () => {
 
 app.post("/api/persons", (req, res) => {
   const body = req.body;
-
+  console.log(body);
   if (!body.name || !body.number) {
     return res.status(400).json({ error: "content missing" });
   } else if (peopleDB.find((person) => person.name == body.name)) {
