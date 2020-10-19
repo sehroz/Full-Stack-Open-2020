@@ -19,34 +19,9 @@ app.use(
 );
 
 app.get("/api/persons", (req, res) => {
-  Person.find({})
-    .then((people) => {
-      res.json(people);
-    })
-    .catch((err) => console.log(err));
-});
-
-app.get("/api/persons/:id", (req, res) => {
-  Person.findById(req.params.id)
-    .then((people) => {
-      res.json(people);
-    })
-    .catch((err) => console.log(err));
-});
-
-app.delete("/api/persons/:id", (req, res) => {
-  Person.findByIdAndDelete(req.params.id)
-    .then((person) => {
-      if (person) {
-        res.json(person);
-      } else {
-        res.status(404).end();
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-      res.statusMessage(400).send({ error: "malformatted id" });
-    });
+  Person.find({}).then((people) => {
+    res.json(people);
+  });
 });
 
 app.post("/api/persons", (req, res) => {
@@ -65,6 +40,44 @@ app.post("/api/persons", (req, res) => {
     res.json(savedPerson);
   });
 });
+
+app.get("/api/persons/:id", (req, res, next) => {
+  Person.findById(req.params.id)
+    .then((people) => {
+      if (person) {
+        res.json(people);
+      } else {
+        res.status(404).end();
+      }
+    })
+    .catch((err) => next(err));
+});
+
+app.delete("/api/persons/:id", (req, res, next) => {
+  Person.findByIdAndDelete(req.params.id)
+    .then((result) => {
+      res.status(204).end();
+    })
+    .catch((err) => next(err));
+});
+
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: "unknown endpoint" });
+};
+
+app.use(unknownEndpoint);
+
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message);
+
+  if (error.name === "CastError" && error.kind == "ObjectId") {
+    return response.status(400).send({ error: "malformatted id" });
+  }
+
+  next(error);
+};
+
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`Server on:${PORT}`);
