@@ -17,22 +17,36 @@ app.use(
   express.json(),
   morgan(":method :url :status :res[content-length] - :response-time ms :data")
 );
+
 app.get("/api/persons", (req, res) => {
-  Person.find({}).then((people) => {
-    res.json(people);
-  });
+  Person.find({})
+    .then((people) => {
+      res.json(people);
+    })
+    .catch((err) => console.log(err));
 });
 
 app.get("/api/persons/:id", (req, res) => {
-  Person.findById(req.params.id).then((people) => {
-    res.json(people);
-  });
+  Person.findById(req.params.id)
+    .then((people) => {
+      res.json(people);
+    })
+    .catch((err) => console.log(err));
 });
 
 app.delete("/api/persons/:id", (req, res) => {
-  const id = Number(req.params.id);
-
-  res.status(204).end();
+  Person.findByIdAndDelete(req.params.id)
+    .then((person) => {
+      if (person) {
+        res.json(person);
+      } else {
+        res.status(404).end();
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+      res.statusMessage(400).send({ error: "malformatted id" });
+    });
 });
 
 app.post("/api/persons", (req, res) => {
