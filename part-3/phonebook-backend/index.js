@@ -31,7 +31,6 @@ app.get("/api/persons/:id", (req, res) => {
 
 app.delete("/api/persons/:id", (req, res) => {
   const id = Number(req.params.id);
-  peopleDB = peopleDB.filter((person) => person.id !== id);
 
   res.status(204).end();
 });
@@ -41,8 +40,6 @@ app.post("/api/persons", (req, res) => {
   console.log(body);
   if (!body.name || !body.number) {
     return res.status(400).json({ error: "content missing" });
-  } else if (peopleDB.find((person) => person.name == body.name)) {
-    return res.status(400).json({ error: "name must be unique" });
   }
 
   const person = new Person({
