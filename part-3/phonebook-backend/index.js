@@ -26,7 +26,7 @@ app.get("/api/persons", (req, res) => {
 
 app.post("/api/persons", (req, res) => {
   const body = req.body;
-  console.log(body);
+
   if (!body.name || !body.number) {
     return res.status(400).json({ error: "content missing" });
   }
@@ -39,6 +39,21 @@ app.post("/api/persons", (req, res) => {
   person.save().then((savedPerson) => {
     res.json(savedPerson);
   });
+});
+
+app.put("/api/persons/:id", (req, res, next) => {
+  const body = req.body;
+
+  const person = {
+    name: body.name,
+    number: body.number,
+  };
+
+  Person.findByIdAndUpdate(req.params.id, person, { new: true })
+    .then((updatedPerson) => {
+      res.json(updatedPerson);
+    })
+    .catch((err) => next(err));
 });
 
 app.get("/api/persons/:id", (req, res, next) => {
