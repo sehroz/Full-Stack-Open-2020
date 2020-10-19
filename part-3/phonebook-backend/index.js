@@ -59,7 +59,7 @@ app.put("/api/persons/:id", (req, res, next) => {
 app.get("/api/persons/:id", (req, res, next) => {
   Person.findById(req.params.id)
     .then((people) => {
-      if (person) {
+      if (people) {
         res.json(people);
       } else {
         res.status(404).end();
@@ -74,6 +74,14 @@ app.delete("/api/persons/:id", (req, res, next) => {
       res.status(204).end();
     })
     .catch((err) => next(err));
+});
+
+app.get("/info", (req, res) => {
+  const length = Person.length;
+  const datetime = new Date();
+  const mesage = `<p>Phonebook has info or ${length} people</p>
+                  <p>${datetime}</p>`;
+  res.send(mesage);
 });
 
 const unknownEndpoint = (request, response) => {
