@@ -1,0 +1,10 @@
+GET http://localhost:3001/api/blogs
+Content-Type: application/json
+
+{
+    "title":"Sehroz",
+    "author":"Sehroz Khan",
+    "url":"sehroz.com",
+    "likes":1991
+}
+ 
