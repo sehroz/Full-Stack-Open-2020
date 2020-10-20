@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
-const url = process.env.MONGODB_URI;
-const uniqueValidator = require("mongoose-unique-validator");
+const mongoose = require('mongoose')
+const url = process.env.MONGODB_URI
+const uniqueValidator = require('mongoose-unique-validator')
 
 mongoose
   .connect(url, {
@@ -9,12 +9,12 @@ mongoose
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .then((result) => {
-    console.log("connected to MongoDB");
+  .then(() => {
+    console.log('connected to MongoDB')
   })
   .catch((error) => {
-    console.log("error connecting to MongoDB:", error.message);
-  });
+    console.log('error connecting to MongoDB:', error.message)
+  })
 
 const phonebookSchema = new mongoose.Schema({
   name: {
@@ -26,16 +26,16 @@ const phonebookSchema = new mongoose.Schema({
     type: String,
     minlength: 8,
   },
-});
+})
 
-phonebookSchema.set("toJSON", {
+phonebookSchema.set('toJSON', {
   transform: (document, returnedObject) => {
-    returnedObject.id = returnedObject._id.toString();
-    delete returnedObject._id;
-    delete returnedObject.__v;
+    returnedObject.id = returnedObject._id.toString()
+    delete returnedObject._id
+    delete returnedObject.__v
   },
-});
+})
 
-phonebookSchema.plugin(uniqueValidator);
+phonebookSchema.plugin(uniqueValidator)
 
-module.exports = mongoose.model("Person", phonebookSchema);
+module.exports = mongoose.model('Person', phonebookSchema)
