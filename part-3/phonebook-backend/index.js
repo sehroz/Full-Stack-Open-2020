@@ -26,7 +26,6 @@ app.get("/api/persons", (req, res) => {
 
 app.post("/api/persons", (req, res, next) => {
   const body = req.body;
-  console.log(body.name);
 
   if (!body.name || !body.number) {
     return response.status(400).json({
@@ -48,13 +47,10 @@ app.post("/api/persons", (req, res, next) => {
 });
 
 app.put("/api/persons/:id", (req, res, next) => {
+  console.log(req.params.id);
   const { name, number } = req.body;
 
-  Person.findByIdAndUpdate(
-    req.params.id,
-    { name, number },
-    { runValidators: true, new: true }
-  )
+  Person.findByIdAndUpdate(req.params.id, { name, number })
     .then((updatedPerson) => {
       res.json(updatedPerson);
     })

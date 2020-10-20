@@ -85,17 +85,18 @@ const App = () => {
 
   const updatePerson = (newPerson) => {
     const person = persons.find((person) => person.name === newPerson.name);
-
+    console.log(person);
     const changedPerson = { ...person, number: newPerson.number };
 
     personService
       .updatePerson(changedPerson)
-      .then((returnedPerson) => {
+      .then(() => {
         setPersons(
           persons.map((person) =>
-            person.id !== changedPerson.id ? person : returnedPerson
+            person.id !== changedPerson.id ? person : changedPerson
           )
         );
+        console.log(persons);
         setMsg({
           msg: `Number changed for ${changedPerson.name} to ${changedPerson.number}`,
           type: "success",
