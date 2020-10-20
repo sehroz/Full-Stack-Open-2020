@@ -9,7 +9,7 @@ const Msg = ({ msg }) => {
     return <div className="msg success">{msg.msg}</div>;
   }
   if (msg.type === "fail") {
-    return <div className="msg fail">{msg.msg}</div>;
+    return <div className="msg fail">{msg.msg.error}</div>;
   }
   return null;
 };

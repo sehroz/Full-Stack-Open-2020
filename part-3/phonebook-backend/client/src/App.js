@@ -18,7 +18,7 @@ const App = () => {
       .getAll()
       .then((initialPersons) => setPersons(initialPersons))
       .catch((err) => {
-        setMsg({ msg: `Did not get people list: ${err}`, type: "success" });
+        setMsg({ msg: err.response.data, type: "fail" });
         setTimeout(() => setMsg(null), 5000);
       });
   }, []);
@@ -57,8 +57,8 @@ const App = () => {
           setTimeout(() => setMsg(null), 5000);
           setNewNumber("");
         })
-        .catch(() => {
-          setMsg({ msg: `Cannot add person ${newPerson.name}`, type: "fail" });
+        .catch((err) => {
+          setMsg({ msg: err.response.data, type: "fail" });
           setTimeout(() => setMsg(null), 5000);
         });
   };
@@ -72,9 +72,9 @@ const App = () => {
             setMsg({ msg: `${name} deleted`, type: "success" });
             setTimeout(() => setMsg(null), 5000);
           })
-          .catch(() => {
+          .catch((err) => {
             setMsg({
-              msg: `Information of ${name} has already been removed from server`,
+              msg: err.response.data,
               type: "fail",
             });
             setTimeout(() => setMsg(null), 5000);
@@ -88,17 +88,28 @@ const App = () => {
 
     const changedPerson = { ...person, number: newPerson.number };
 
-    personService.updatePerson(changedPerson).then((returnedPerson) => {
-      setPersons(
-        persons.map((person) =>
-          person.id !== changedPerson.id ? person : returnedPerson
-        )
-      );
-      setMsg(
-        `Number changed for ${changedPerson.name} to ${changedPerson.number}`
-      );
-      setTimeout(() => setMsg(null), 5000);
-    });
+    personService
+      .updatePerson(changedPerson)
+      .then((returnedPerson) => {
+        setPersons(
+          persons.map((person) =>
+            person.id !== changedPerson.id ? person : returnedPerson
+          )
+        );
+        setMsg({
+          msg: `Number changed for ${changedPerson.name} to ${changedPerson.number}`,
+          type: "success",
+        });
+        setTimeout(() => setMsg(null), 5000);
+      })
+      .catch((err) => {
+        console.log(err);
+        setMsg({
+          msg: err.response.data,
+          type: "fail",
+        });
+        setTimeout(() => setMsg(null), 5000);
+      });
   };
 
   const handleInput = (e) => {
