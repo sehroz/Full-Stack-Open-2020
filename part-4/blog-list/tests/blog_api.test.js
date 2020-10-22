@@ -10,7 +10,6 @@ const blogs = [
     author: 'Michael Chan',
     url: 'https://reactpatterns.com/',
     likes: 7,
-    __v: 0,
   },
   {
     title: 'Go To Statement Considered Harmful',
@@ -18,7 +17,6 @@ const blogs = [
     url:
       'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
     likes: 5,
-    __v: 0,
   },
 ]
 
@@ -41,6 +39,28 @@ test('unique identifier property of the blog posts is named id,', async () => {
   const blogs = await api.get('/api/blogs')
 
   expect(blogs.body[0]['id']).toBeDefined()
+})
+
+test('a valid blog can be added', async () => {
+  const newBlog = {
+    author: 'Sehroz',
+    likes: 1000,
+    title: 'ok',
+    url: 'www.sehroz.com',
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const response = await api.get('/api/blogs')
+
+  const titles = response.body.map((blog) => blog.title)
+
+  expect(response.body).toHaveLength(blogs.length + 1)
+  expect(titles).toContain('ok')
 })
 
 afterAll(() => {
