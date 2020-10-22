@@ -1,91 +1,80 @@
 const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
+require('express-async-errors')
 const api = supertest(app)
+const helper = require('./helper')
 const Blog = require('../models/blog')
-
-const blogs = [
-  {
-    title: 'React patterns',
-    author: 'Michael Chan',
-    url: 'https://reactpatterns.com/',
-    likes: 7,
-  },
-  {
-    title: 'Go To Statement Considered Harmful',
-    author: 'Edsger W. Dijkstra',
-    url:
-      'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
-    likes: 5,
-  },
-]
 
 beforeEach(async () => {
   await Blog.deleteMany({})
-  let blogObject = new Blog(blogs[0])
-  await blogObject.save()
-  blogObject = new Blog(blogs[1])
-  await blogObject.save()
+
+  const blogObject = helper.blogs.map((blog) => new Blog(blog))
+  const promiseArray = blogObject.map((blog) => blog.save())
+  await Promise.all(promiseArray)
 })
 
-test('blogs are returned as json', async () => {
-  await api
-    .get('/api/blogs')
-    .expect(200)
-    .expect('Content-Type', /application\/json/)
+describe('when there is initially some blogs saved', () => {
+  test('blogs are returned as json', async () => {
+    await api
+      .get('/api/blogs')
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+  })
+
+  test('unique identifier property of the blog posts is named id,', async () => {
+    const blogs = await api.get('/api/blogs')
+    expect(blogs.body[0]['id']).toBeDefined()
+  })
 })
 
-test('unique identifier property of the blog posts is named id,', async () => {
-  const blogs = await api.get('/api/blogs')
+describe('addition of a new note', () => {
+  test('likes values defaults to zero if missing', async () => {
+    const newBlog = {
+      author: 'Sehroz',
+      title: 'ok',
+      url: 'www.sehroz.com',
+    }
 
-  expect(blogs.body[0]['id']).toBeDefined()
-})
+    await api.post('/api/blogs').send(newBlog)
 
-test('a valid blog can be added', async () => {
-  const newBlog = {
-    author: 'Sehroz',
-    likes: 6,
-    title: 'ok',
-    url: 'www.sehroz.com',
-  }
+    const response = await api.get('/api/blogs')
 
-  await api.post('/api/blogs').send(newBlog)
+    const likes = response.body.map((blog) => blog.likes)
 
-  const response = await api.get('/api/blogs')
+    expect(likes).toContain(0)
+  })
 
-  const titles = response.body.map((blog) => blog.title)
+  test('title and url properties send 400 bad request status if missing', async () => {
+    const newBlog = {
+      author: 'Sehroz',
+      likes: 1,
+      title: 'k',
+    }
 
-  expect(response.body).toHaveLength(blogs.length + 1)
-  expect(titles).toContain('ok')
-})
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(400)
+  })
 
-test('likes values defaults to zero if missing', async () => {
-  const newBlog = {
-    author: 'Sehroz',
-    title: 'ok',
-    url: 'www.sehroz.com',
-  }
+  test('a valid blog can be added', async () => {
+    const newBlog = {
+      author: 'Sehroz',
+      likes: 6,
+      title: 'ok',
+      url: 'www.sehroz.com',
+    }
 
-  await api.post('/api/blogs').send(newBlog)
+    await api.post('/api/blogs').send(newBlog)
 
-  const response = await api.get('/api/blogs')
+    const response = await api.get('/api/blogs')
 
-  const likes = response.body.map((blog) => blog.likes)
+    const titles = response.body.map((blog) => blog.title)
 
-  expect(likes).toContain(0)
-})
-
-test('title and url properties send 400 bad request status if missing', async () => {
-  const newBlog = {
-    author: 'Sehroz',
-    likes: 1,
-    title: 'k',
-  }
-
-  await api
-    .post('/api/blogs')
-    .send(newBlog)
-    .expect(400)
+    expect(response.body).toHaveLength(helper.blogs.length + 1)
+    expect(titles).toContain('ok')
+  })
 })
 
 afterAll(() => {

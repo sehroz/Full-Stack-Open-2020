@@ -1,10 +1,3 @@
-GET http://localhost:3001/api/blogs
+DELETE  http://localhost:3001/api/blogs/5f8f4cb2221d691d40a85233
 Content-Type: application/json
 
-{
-    "title":"Sehroz",
-    "author":"Sehroz Khan",
-    "url":"sehroz.com",
-    "likes":1991
-}
- 
