@@ -1,3 +1,10 @@
-DELETE  http://localhost:3001/api/blogs/5f8f4cb2221d691d40a85233
+PUT  http://localhost:3001/api/blogs/5f91dc00a3c2a31e0c3531be
 Content-Type: application/json
 
+{
+    "title":"Sehrsoz",
+    "author":"Sehroz Khan",
+    "url":"sehroz.com",
+    "likes": 348
+}
+ 
