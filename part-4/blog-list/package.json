@@ -14,13 +14,15 @@
     "nodemon": "^2.0.6"
   },
   "devDependencies": {
-    "jest": "^26.6.0"
+    "cross-env": "^7.0.2",
+    "jest": "^26.6.0",
+    "supertest": "^5.0.0"
   },
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js",
+    "start": "cross-env NODE_ENV=production node index.js",
+    "dev": "cross-env NODE_ENV=development nodemon index.js",
     "lint": "eslint .",
-    "test": "jest --verbose"
+    "test": "cross-env NODE_ENV=test jest --verbose --runInBand"
   },
   "keywords": [],
   "author": "",
