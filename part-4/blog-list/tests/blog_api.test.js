@@ -49,11 +49,7 @@ test('a valid blog can be added', async () => {
     url: 'www.sehroz.com',
   }
 
-  await api
-    .post('/api/blogs')
-    .send(newBlog)
-    .expect(201)
-    .expect('Content-Type', /application\/json/)
+  await api.post('/api/blogs').send(newBlog)
 
   const response = await api.get('/api/blogs')
 
@@ -70,17 +66,26 @@ test('likes values defaults to zero if missing', async () => {
     url: 'www.sehroz.com',
   }
 
-  await api
-    .post('/api/blogs')
-    .send(newBlog)
-    .expect(201)
-    .expect('Content-Type', /application\/json/)
+  await api.post('/api/blogs').send(newBlog)
 
   const response = await api.get('/api/blogs')
 
   const likes = response.body.map((blog) => blog.likes)
 
   expect(likes).toContain(0)
+})
+
+test('title and url properties send 400 bad request status if missing', async () => {
+  const newBlog = {
+    author: 'Sehroz',
+    likes: 1,
+    title: 'k',
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(400)
 })
 
 afterAll(() => {
