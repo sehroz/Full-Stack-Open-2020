@@ -2,10 +2,9 @@ GET  http://localhost:3001/api/blogs
 Content-Type: application/json
 
 {
-    "title":"sehroz",
-    "url":"sehrfoz",
-    "author":"Sehroz",
-    "likes": 3434,
-    "userId": "5f931c0af26aef2f0801fb13"   
+    "title":"dadsdasddad",
+    "author":"dsssssss ss",
+    "url": "https://www.sehroz.com",
+    "likes": "333432"
 }
  
