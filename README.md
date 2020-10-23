@@ -7,3 +7,5 @@
 ### [Part 2: Communicating with Server](https://github.com/sehroz/full-stack-open-2020/tree/master/part-2)
 
 ### [Part 3: Programming a Server with NodeJS and Express](https://github.com/sehroz/full-stack-open-2020/tree/master/part-3)
+
+### [Part 4: Testing Express servers, user administration](https://github.com/sehroz/full-stack-open-2020/tree/master/part-4)
