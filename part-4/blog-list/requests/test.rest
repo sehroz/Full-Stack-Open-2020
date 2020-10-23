@@ -1,10 +1,12 @@
 GET  http://localhost:3001/api/blogs
 Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNlaHJvenNlaHJveiIsImlkIjoiNWY5MzNhYjMyM2IyNzczMzljYWJlM2Y4IiwiaWF0IjoxNjAzNDg0NDgyfQ.WltqOXT1EX7NHaAZYo_epxf0AAC4vhnYdOtyxVFbE8E
 
 {
-    "title":"dadsdasddad",
-    "author":"dsssssss ss",
+    "title":"dasdasasdaddad",
+    "username": "sehrozsehroz",
+    "author":"sssssss ss",
     "url": "https://www.sehroz.com",
-    "likes": "333432"
+    "likes": "03432"
 }
  
