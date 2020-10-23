@@ -1,9 +1,11 @@
-POST  http://localhost:3001/api/users
+GET  http://localhost:3001/api/blogs
 Content-Type: application/json
 
 {
-    "username":"ssss",
-    "name":"sehrfoz",
-    "password":"12345"
+    "title":"sehroz",
+    "url":"sehrfoz",
+    "author":"Sehroz",
+    "likes": 3434,
+    "userId": "5f931c0af26aef2f0801fb13"   
 }
  
