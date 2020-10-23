@@ -1,10 +1,9 @@
-PUT  http://localhost:3001/api/blogs/5f91dc00a3c2a31e0c3531be
+GET  http://localhost:3001/api/users
 Content-Type: application/json
 
 {
-    "title":"Sehrsoz",
-    "author":"Sehroz Khan",
-    "url":"sehroz.com",
-    "likes": 348
+    "username":"zSehroz",
+    "name":"sehrfoz",
+    "password":"abcd1234"
 }
  
