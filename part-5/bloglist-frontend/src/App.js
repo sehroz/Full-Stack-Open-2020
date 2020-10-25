@@ -116,6 +116,24 @@ const App = () => {
     )
 
     setBlogs(updatedBlogs)
+    setMsg({
+      msg: `Liked ${findBlog.title}`,
+      type: 'success',
+    })
+    setTimeout(() => setMsg(null), 5000)
+  }
+
+  const deleteBlog = async (id) => {
+    const blog = blogs.find((blog) => blog.id === id)
+    if (window.confirm(`Delete ${blog.title} by ${blog.author}`)) {
+      await blogService.deleteIt(id)
+      const updatedBlogs = blogs.filter((blog) => blog.id !== id)
+      setMsg({
+        msg: `${blog.title} by ${blog.author}`,
+        type: 'success',
+      })
+      setBlogs(updatedBlogs)
+    }
   }
 
   const blogForm = () => {
@@ -142,7 +160,12 @@ const App = () => {
           {blogs
             .sort((a, b) => b.likes - a.likes)
             .map((blog) => (
-              <Blog key={blog.id} blog={blog} handleLike={handleLike} />
+              <Blog
+                key={blog.id}
+                blog={blog}
+                handleLike={handleLike}
+                deleteBlog={deleteBlog}
+              />
             ))}
         </>
       ) : (

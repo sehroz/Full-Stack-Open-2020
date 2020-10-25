@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react'
 
 import Togglable from './Toggable'
 
-const Blog = ({ blog, handleLike }) => {
+const Blog = ({ blog, handleLike, deleteBlog }) => {
   const [open, setOpen] = useState(false)
   const blogStyle = {
     paddingTop: 10,
@@ -26,10 +26,11 @@ const Blog = ({ blog, handleLike }) => {
           <Togglable ref={blogDetailRef}>
             <div> {blog.url} </div>
             <div>
-              {blog.likes} {blog.user.username}
+              {blog.likes}
               <button onClick={() => handleLike(blog.id)}> like</button>
+              {blog.user.username}
+              <button onClick={() => deleteBlog(blog.id)}>remove</button>
             </div>
-            <div> </div>
           </Togglable>
         </div>
       </div>
