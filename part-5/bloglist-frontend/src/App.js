@@ -5,6 +5,7 @@ import loginService from './services/login'
 import Msg from './components/Message'
 
 const App = () => {
+  const [createBlogVisible, setCreatBlogVisible] = useState(false)
   const [newBlog, setNewBlog] = useState({ title: '', author: '', url: '' })
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -112,17 +113,50 @@ const App = () => {
     setNewBlog({ title: '', author: '', url: '' })
   }
 
-  const blogForm = () => (
-    <form onSubmit={addBlog}>
-      title:{' '}
-      <input value={newBlog.title} name='title' onChange={handleBlogChange} />
-      author:{' '}
-      <input value={newBlog.author} name='author' onChange={handleBlogChange} />
-      url: <input value={newBlog.url} name='url' onChange={handleBlogChange} />
-      <button type='submit'>create</button>
-    </form>
-  )
+  const blogForm = () => {
+    const hideWhenVisible = { display: createBlogVisible ? 'none' : '' }
+    const showWhenVisible = { display: createBlogVisible ? '' : 'none' }
 
+    return (
+      <>
+        <div style={hideWhenVisible}>
+          <button onClick={() => setCreatBlogVisible(true)}>new Blog</button>
+        </div>
+        <div style={showWhenVisible}>
+          <form onSubmit={addBlog}>
+            <h2>create new</h2>
+            <div>
+              title:
+              <input
+                value={newBlog.title}
+                name='title'
+                onChange={handleBlogChange}
+              />
+            </div>
+            <div>
+              author:
+              <input
+                value={newBlog.author}
+                name='author'
+                onChange={handleBlogChange}
+              />
+            </div>
+            <div>
+              url:
+              <input
+                value={newBlog.url}
+                name='url'
+                onChange={handleBlogChange}
+              />
+            </div>
+
+            <button type='submit'>create</button>
+          </form>
+          <button onClick={() => setCreatBlogVisible(false)}>cancel</button>
+        </div>{' '}
+      </>
+    )
+  }
   return (
     <div>
       <h2>blogs</h2>
@@ -130,8 +164,10 @@ const App = () => {
       {user ? (
         <>
           <h3>
-            {username} logged in <button onClick={handleLogout}>logout</button>
+            {user.username} logged in{' '}
+            <button onClick={handleLogout}>logout</button>
           </h3>
+
           {blogForm()}
           {blogs.map((blog) => (
             <Blog key={blog.id} blog={blog} />
