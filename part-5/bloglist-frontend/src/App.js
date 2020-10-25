@@ -3,6 +3,7 @@ import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import Msg from './components/Message'
+import BlogForm from './components/BlogForm'
 
 const App = () => {
   const [createBlogVisible, setCreatBlogVisible] = useState(false)
@@ -14,6 +15,15 @@ const App = () => {
   const [msg, setMsg] = useState(null)
 
   useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON)
+      setUser(user)
+      blogService.setToken(user.token)
+    }
+  }, [])
+
+  useEffect(() => {
     blogService
       .getAll()
       .then((blogs) => setBlogs(blogs))
@@ -21,15 +31,6 @@ const App = () => {
         setMsg({ msg: `Did not get people list: ${err}`, type: 'success' })
         setTimeout(() => setMsg(null), 5000)
       })
-  }, [])
-
-  useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
-    if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON)
-      setUser(user)
-      blogService.setToken(user.token)
-    }
   }, [])
 
   const handleLogin = async (event) => {
@@ -123,37 +124,13 @@ const App = () => {
           <button onClick={() => setCreatBlogVisible(true)}>new Blog</button>
         </div>
         <div style={showWhenVisible}>
-          <form onSubmit={addBlog}>
-            <h2>create new</h2>
-            <div>
-              title:
-              <input
-                value={newBlog.title}
-                name='title'
-                onChange={handleBlogChange}
-              />
-            </div>
-            <div>
-              author:
-              <input
-                value={newBlog.author}
-                name='author'
-                onChange={handleBlogChange}
-              />
-            </div>
-            <div>
-              url:
-              <input
-                value={newBlog.url}
-                name='url'
-                onChange={handleBlogChange}
-              />
-            </div>
-
-            <button type='submit'>create</button>
-          </form>
+          <BlogForm
+            handleBlogChange={handleBlogChange}
+            newBlog={newBlog}
+            addBlog={addBlog}
+          />
           <button onClick={() => setCreatBlogVisible(false)}>cancel</button>
-        </div>{' '}
+        </div>
       </>
     )
   }
