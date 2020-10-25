@@ -1,12 +1,9 @@
-GET http://localhost:3001/api/blogs
+POST http://localhost:3001/api/users
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNlaHJvenNlaHJveiIsImlkIjoiNWY5MzNhYjMyM2IyNzczMzljYWJlM2Y4IiwiaWF0IjoxNjAzNDg0NDgyfQ.WltqOXT1EX7NHaAZYo_epxf0AAC4vhnYdOtyxVFbE8E
 
 {
-    "title":"dasdasasdaddad",
-    "username": "sehrozsehroz",
-    "author":"sssssss ss",
-    "url": "https://www.sehroz.com",
-    "likes": "03432"
+    "password":"12345",
+    "username": "sehrozz",
+    "name":"Marko MARKO"
 }
  

@@ -23,12 +23,12 @@ blogsRouter.post('/', async (request, response) => {
     likes: request.body.likes === undefined ? 0 : request.body.likes,
     author: request.body.author,
     url: request.body.url,
-    user: user._id,
   })
 
   if (!blog.title || !blog.url) {
     return response.status(400).end()
   } else {
+    blog.user = user
     const result = await blog.save()
     user.blogs = user.blogs.concat(result._id)
     await user.save()

@@ -92,7 +92,6 @@ const App = () => {
 
   const addBlog = async (blogObj) => {
     const returnedBlog = await blogService.create(blogObj)
-
     setBlogs(blogs.concat(returnedBlog))
     setMsg({
       msg: `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`,
@@ -101,17 +100,19 @@ const App = () => {
     setTimeout(() => setMsg(null), 5000)
   }
 
-  const handleLike = async (oldBlog) => {
-    const newBlog = {
-      ...oldBlog,
-      likes: oldBlog !== undefined ? oldBlog.likes + 1 : 0,
-    }
-    const id = oldBlog.id
+  const handleLike = async (id) => {
+    const findBlog = blogs.find((blog) => blog.id === id)
 
-    const returnedBlog = await blogService.like(newBlog, id)
+    const newBlog = {
+      ...findBlog,
+      likes: findBlog.likes + 1,
+      user: findBlog.user.id,
+    }
+
+    await blogService.like(newBlog)
 
     const updatedBlogs = blogs.map((blog) =>
-      blog.id === returnedBlog.id ? returnedBlog : blog
+      blog.id === id ? { ...findBlog, likes: findBlog.likes + 1 } : blog
     )
 
     setBlogs(updatedBlogs)
@@ -138,14 +139,11 @@ const App = () => {
           </h3>
 
           {blogForm()}
-          {blogs.map((blog) => (
-            <Blog
-              key={blog.id}
-              blog={blog}
-              handleLike={handleLike}
-              username={user.username}
-            />
-          ))}
+          {blogs
+            .sort((a, b) => b.likes - a.likes)
+            .map((blog) => (
+              <Blog key={blog.id} blog={blog} handleLike={handleLike} />
+            ))}
         </>
       ) : (
         <>{loginForm()}</>
