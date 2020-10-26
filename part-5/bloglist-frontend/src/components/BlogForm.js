@@ -25,11 +25,12 @@ const BlogForm = ({ createBlog, toggleExpanded }) => {
 
   return (
     <>
-      <form onSubmit={addBlog}>
+      <form id='form' onSubmit={addBlog}>
         <h2>create new</h2>
         <div>
           title:
           <input
+            id='title'
             value={newBlog.title}
             name='title'
             onChange={handleBlogChange}
@@ -38,6 +39,7 @@ const BlogForm = ({ createBlog, toggleExpanded }) => {
         <div>
           author:
           <input
+            id='author'
             value={newBlog.author}
             name='author'
             onChange={handleBlogChange}
@@ -45,7 +47,12 @@ const BlogForm = ({ createBlog, toggleExpanded }) => {
         </div>
         <div>
           url:
-          <input value={newBlog.url} name='url' onChange={handleBlogChange} />
+          <input
+            id='url'
+            value={newBlog.url}
+            name='url'
+            onChange={handleBlogChange}
+          />
         </div>
 
         <button type='submit'>create</button>
