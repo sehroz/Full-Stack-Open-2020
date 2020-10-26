@@ -1,4 +1,4 @@
-import React, { useState, useEffect,useRef } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -44,7 +44,7 @@ const App = () => {
       blogService.setToken(user.token)
       setUser(user)
       setMsg({
-        msg: `Logged In`,
+        msg: 'Logged In',
         type: 'success',
       })
       setTimeout(() => setMsg(null), 5000)
@@ -60,7 +60,7 @@ const App = () => {
     window.localStorage.clear()
     setUser(null)
     setMsg({
-      msg: `Logged Out`,
+      msg: 'Logged Out',
       type: 'success',
     })
     setTimeout(() => setMsg(null), 5000)
@@ -142,12 +142,9 @@ const App = () => {
   }
 
   const blogForm = () => {
-
-   
-
     return (
       <>
-        <Togglable buttonLabel='new Blog'  ref={blogDetailRef} >
+        <Togglable buttonLabel='new Blog' ref={blogDetailRef}>
           <BlogForm createBlog={addBlog} toggleExpanded={toggleExpanded} />
         </Togglable>
       </>
