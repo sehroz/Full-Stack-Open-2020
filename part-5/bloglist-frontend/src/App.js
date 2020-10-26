@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect,useRef } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -125,7 +125,7 @@ const App = () => {
 
   const deleteBlog = async (id) => {
     const blog = blogs.find((blog) => blog.id === id)
-    if (window.confirm(`Delete ${blog.title} by ${blog.author}`)) {
+    if (window.confirm(`Remove ${blog.title} by ${blog.author}`)) {
       await blogService.deleteIt(id)
       const updatedBlogs = blogs.filter((blog) => blog.id !== id)
       setMsg({
@@ -136,11 +136,19 @@ const App = () => {
     }
   }
 
+  const blogDetailRef = useRef()
+  const toggleExpanded = () => {
+    blogDetailRef.current.toggleVisibility()
+  }
+
   const blogForm = () => {
+
+   
+
     return (
       <>
-        <Togglable buttonLabel='new Blog' buttonLabelB='cancel'>
-          <BlogForm createBlog={addBlog} />
+        <Togglable buttonLabel='new Blog'  ref={blogDetailRef} >
+          <BlogForm createBlog={addBlog} toggleExpanded={toggleExpanded} />
         </Togglable>
       </>
     )
@@ -165,6 +173,7 @@ const App = () => {
                 blog={blog}
                 handleLike={handleLike}
                 deleteBlog={deleteBlog}
+                user={user.username}
               />
             ))}
         </>

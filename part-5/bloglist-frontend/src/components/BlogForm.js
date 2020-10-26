@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
-const BlogForm = ({ createBlog }) => {
+import PropTypes from 'prop-types'
+
+const BlogForm = ({ createBlog, toggleExpanded }) => {
   const [newBlog, setNewBlog] = useState({
     title: '',
     author: '',
@@ -17,32 +19,43 @@ const BlogForm = ({ createBlog }) => {
       author: newBlog.author,
       url: newBlog.url,
     })
-   
+
     setNewBlog({ title: '', author: '', url: '' })
   }
-  return (
-    <form onSubmit={addBlog}>
-      <h2>create new</h2>
-      <div>
-        title:
-        <input value={newBlog.title} name='title' onChange={handleBlogChange} />
-      </div>
-      <div>
-        author:
-        <input
-          value={newBlog.author}
-          name='author'
-          onChange={handleBlogChange}
-        />
-      </div>
-      <div>
-        url:
-        <input value={newBlog.url} name='url' onChange={handleBlogChange} />
-      </div>
 
-      <button type='submit'>create</button>
-    </form>
+  return (
+    <>
+      <form onSubmit={addBlog}>
+        <h2>create new</h2>
+        <div>
+          title:
+          <input
+            value={newBlog.title}
+            name='title'
+            onChange={handleBlogChange}
+          />
+        </div>
+        <div>
+          author:
+          <input
+            value={newBlog.author}
+            name='author'
+            onChange={handleBlogChange}
+          />
+        </div>
+        <div>
+          url:
+          <input value={newBlog.url} name='url' onChange={handleBlogChange} />
+        </div>
+
+        <button type='submit'>create</button>
+      </form>
+      <button onClick={toggleExpanded}>cancel</button>
+    </>
   )
+}
+BlogForm.propTypes = {
+  createBlog: PropTypes.func.isRequired,
 }
 
 export default BlogForm
