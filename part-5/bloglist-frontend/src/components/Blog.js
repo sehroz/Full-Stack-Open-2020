@@ -18,24 +18,20 @@ const Blog = ({ blog, handleLike, deleteBlog, user }) => {
   }
 
   return (
-    <div style={blogStyle}>
-      <div>
+    <div className='blog' style={blogStyle}>
+      {blog.title} {blog.author}
+      <button onClick={toggleExpanded}>{open ? 'hide' : 'view'}</button>
+      <Togglable ref={blogDetailRef} buttonLabel=''>
+        <div> {blog.url} </div>
         <div>
-          {blog.title} {blog.author}
-          <button onClick={toggleExpanded}>{open ? 'hide' : 'view'}</button>
-          <Togglable ref={blogDetailRef} buttonLabel=''>
-            <div> {blog.url} </div>
-            <div>
-              {blog.likes}
-              <button onClick={() => handleLike(blog.id)}> like</button>
-              {blog.user.username}
-              {blog.user.username === user ? (
-                <button onClick={() => deleteBlog(blog.id)}>remove</button>
-              ) : null}
-            </div>
-          </Togglable>
+          {blog.likes}
+          <button onClick={() => handleLike(blog.id)}> like</button>
+          {blog.user.username}
+          {blog.user.username === user ? (
+            <button onClick={() => deleteBlog(blog.id)}>remove</button>
+          ) : null}
         </div>
-      </div>
+      </Togglable>
     </div>
   )
 }
