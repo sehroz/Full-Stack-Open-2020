@@ -20,10 +20,12 @@ const Blog = ({ blog, handleLike, deleteBlog, user }) => {
   return (
     <div className='blog' style={blogStyle}>
       {blog.title} {blog.author}
-      <button onClick={toggleExpanded}>{open ? 'hide' : 'view'}</button>
+      <button onClick={toggleExpanded} className='viewButton'>
+        {open ? 'hide' : 'view'}
+      </button>
       <Togglable ref={blogDetailRef} buttonLabel=''>
         <div> {blog.url} </div>
-        <div>
+        <div className='likes'>
           {blog.likes}
           <button onClick={() => handleLike(blog.id)}> like</button>
           {blog.user.username}
