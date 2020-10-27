@@ -133,7 +133,7 @@ const App = () => {
       await blogService.deleteIt(id)
       const updatedBlogs = blogs.filter((blog) => blog.id !== id)
       setMsg({
-        msg: `${blog.title} by ${blog.author}`,
+        msg: `Deleted ${blog.title} by ${blog.author}`,
         type: 'success',
       })
       setBlogs(updatedBlogs)

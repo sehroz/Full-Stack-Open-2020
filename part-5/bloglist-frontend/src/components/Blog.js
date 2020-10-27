@@ -33,7 +33,9 @@ const Blog = ({ blog, handleLike, deleteBlog, user }) => {
           </button>
           {blog.user.username}
           {blog.user.username === user ? (
-            <button onClick={() => deleteBlog(blog.id)}>remove</button>
+            <button id='deleteBlogButton' onClick={() => deleteBlog(blog.id)}>
+              remove
+            </button>
           ) : null}
         </div>
       </Togglable>
