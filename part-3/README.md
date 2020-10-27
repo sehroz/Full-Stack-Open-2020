@@ -1,4 +1,8 @@
-## Part 3 - [Programming a Server with NodeJS and Express](https://fullstackopen.com/en/part3)
+<p align="center">
+    <img width=100% src=".././img/part3.JPG">
+</p>
+
+# Part 3 Excercises:
 
 ### [Phonebook Backend](https://github.com/sehroz/full-stack-open-2020/tree/master/part-3/course-information)
 

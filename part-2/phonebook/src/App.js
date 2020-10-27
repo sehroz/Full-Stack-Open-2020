@@ -1,34 +1,34 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react'
 
-import Filter from "./component/Filter";
-import PersonForm from "./component/PersonForm";
-import Persons from "./component/Persons";
-import personService from "./services/persons";
-import Msg from "./component/Msg";
+import Filter from './component/Filter'
+import PersonForm from './component/PersonForm'
+import Persons from './component/Persons'
+import personService from './services/persons'
+import Msg from './component/Msg'
 
 const App = () => {
-  const [persons, setPersons] = useState([]);
-  const [newName, setNewName] = useState("");
-  const [newNumber, setNewNumber] = useState("");
-  const [filterInput, setFilterInput] = useState("");
-  const [msg, setMsg] = useState(null);
+  const [persons, setPersons] = useState([])
+  const [newName, setNewName] = useState('')
+  const [newNumber, setNewNumber] = useState('')
+  const [filterInput, setFilterInput] = useState('')
+  const [msg, setMsg] = useState(null)
 
   useEffect(() => {
     personService
       .getAll()
       .then((initialPersons) => setPersons(initialPersons))
       .catch((err) => {
-        setMsg({ msg: `Did not get people list: ${err}`, type: "success" });
-        setTimeout(() => setMsg(null), 5000);
-      });
-  }, []);
+        setMsg({ msg: `Did not get people list: ${err}`, type: 'success' })
+        setTimeout(() => setMsg(null), 5000)
+      })
+  }, [])
 
   const addPerson = (e) => {
-    e.preventDefault();
+    e.preventDefault()
     const newPerson = {
       name: newName,
       number: newNumber,
-    };
+    }
 
     if (
       persons.find(
@@ -40,85 +40,85 @@ const App = () => {
         `${newPerson.name} is already added to phonebook, replace the old number with a new one?`
       )
         ? updatePerson(newPerson)
-        : null;
+        : null
     } else if (
       persons.find(
         (person) =>
           person.name === newPerson.name && person.number === newPerson.number
       )
     ) {
-      alert("Please change number to update this person.");
+      alert('Please change number to update this person.')
     } else
       personService
         .createPerson(newPerson)
         .then((returnedPerson) => {
-          setPersons([...persons, returnedPerson]);
-          setMsg({ msg: `Added ${returnedPerson.name}`, type: "success" });
-          setTimeout(() => setMsg(null), 5000);
-          setNewNumber("");
+          setPersons([...persons, returnedPerson])
+          setMsg({ msg: `Added ${returnedPerson.name}`, type: 'success' })
+          setTimeout(() => setMsg(null), 5000)
+          setNewNumber('')
         })
         .catch(() => {
-          setMsg({ msg: `Cannot add person ${newPerson.name}`, type: "fail" });
-          setTimeout(() => setMsg(null), 5000);
-        });
-  };
+          setMsg({ msg: `Cannot add person ${newPerson.name}`, type: 'fail' })
+          setTimeout(() => setMsg(null), 5000)
+        })
+  }
 
   const deletePerson = (name, id) => {
     return window.confirm(`Delete ${name}?`)
       ? personService
           .deletePerson(id)
           .then(() => {
-            setPersons(persons.filter((person) => person.id !== id));
-            setMsg({ msg: `${name} deleted`, type: "success" });
-            setTimeout(() => setMsg(null), 5000);
+            setPersons(persons.filter((person) => person.id !== id))
+            setMsg({ msg: `${name} deleted`, type: 'success' })
+            setTimeout(() => setMsg(null), 5000)
           })
           .catch(() => {
             setMsg({
               msg: `Information of ${name} has already been removed from server`,
-              type: "fail",
-            });
-            setTimeout(() => setMsg(null), 5000);
-            setPersons(persons.filter((person) => person.id !== id));
+              type: 'fail',
+            })
+            setTimeout(() => setMsg(null), 5000)
+            setPersons(persons.filter((person) => person.id !== id))
           })
-      : null;
-  };
+      : null
+  }
 
   const updatePerson = (newPerson) => {
-    const person = persons.find((person) => person.name === newPerson.name);
+    const person = persons.find((person) => person.name === newPerson.name)
 
-    const changedPerson = { ...person, number: newPerson.number };
+    const changedPerson = { ...person, number: newPerson.number }
 
     personService.updatePerson(changedPerson).then((returnedPerson) => {
       setPersons(
         persons.map((person) =>
           person.id !== changedPerson.id ? person : returnedPerson
         )
-      );
+      )
       setMsg(
         `Number changed for ${changedPerson.name} to ${changedPerson.number}`
-      );
-      setTimeout(() => setMsg(null), 5000);
-    });
-  };
+      )
+      setTimeout(() => setMsg(null), 5000)
+    })
+  }
 
   const handleInput = (e) => {
-    return e.target.name === "name"
+    return e.target.name === 'name'
       ? setNewName(e.target.value)
-      : e.target.name === "number"
+      : e.target.name === 'number'
       ? setNewNumber(e.target.value)
-      : null;
-  };
+      : null
+  }
 
   const handleFilter = (e) => {
-    setFilterInput(e.target.value);
-  };
+    setFilterInput(e.target.value)
+  }
 
   const list =
     filterInput.length > 0
       ? persons.filter((person) =>
           person.name.toLowerCase().includes(filterInput.toLowerCase())
         )
-      : persons;
+      : persons
 
   return (
     <div>
@@ -139,7 +139,7 @@ const App = () => {
 
       <Persons list={list} deletePerson={deletePerson} />
     </div>
-  );
-};
+  )
+}
 
-export default App;
+export default App
