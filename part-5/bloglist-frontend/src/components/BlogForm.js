@@ -55,7 +55,9 @@ const BlogForm = ({ createBlog, toggleExpanded }) => {
           />
         </div>
 
-        <button type='submit'>create</button>
+        <button id='submitBlogButton' type='submit'>
+          create
+        </button>
       </form>
       <button onClick={toggleExpanded}>cancel</button>
     </>

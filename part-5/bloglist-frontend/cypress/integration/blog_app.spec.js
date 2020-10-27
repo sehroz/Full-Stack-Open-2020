@@ -34,4 +34,22 @@ describe('Blog app', function () {
       cy.contains('invalid username or password')
     })
   })
+
+  describe.only('When logged in', function () {
+    beforeEach(function () {
+      cy.get('#username').type('sehroz')
+      cy.get('#password').type('12345')
+      cy.get('#login-button').click()
+    })
+
+    it('A blog can be created', function () {
+      cy.get('#makeBlog').click()
+      cy.get('#title').type('sehroz')
+      cy.get('#author').type('12345')
+      cy.get('#url').type('sehroz.com')
+      cy.get('#submitBlogButton').click()
+
+      cy.contains('a new blog sehroz by 12345 added')
+    })
+  })
 })

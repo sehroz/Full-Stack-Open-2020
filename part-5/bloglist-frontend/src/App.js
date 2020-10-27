@@ -148,7 +148,11 @@ const App = () => {
   const blogForm = () => {
     return (
       <>
-        <Togglable buttonLabel='new Blog' ref={blogDetailRef}>
+        <Togglable
+          buttonLabel='new Blog'
+          buttonId='makeBlog'
+          ref={blogDetailRef}
+        >
           <BlogForm createBlog={addBlog} toggleExpanded={toggleExpanded} />
         </Togglable>
       </>
