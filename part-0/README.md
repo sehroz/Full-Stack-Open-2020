@@ -2,7 +2,9 @@
     <img width=100% src=".././img/part0.JPG">
 </p>
 
-### 0.4: New Note :
+# Part 0 Excercises:
+
+### 0.4: New Note:
 
 ![0.4: New Note](./0.4-newNote.png)
 
