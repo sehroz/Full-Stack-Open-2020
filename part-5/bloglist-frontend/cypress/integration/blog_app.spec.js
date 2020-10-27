@@ -57,9 +57,9 @@ describe('Blog app', function () {
       cy.get('#author').type('12345')
       cy.get('#url').type('sehroz.com')
       cy.get('#submitBlogButton').click()
-      cy.get('#showBlog').click()
+      cy.get('#sehroz').click()
 
-      cy.get('#likeButton').click()
+      cy.get('#likesehroz').click()
 
       cy.contains('Liked')
     })
@@ -70,11 +70,39 @@ describe('Blog app', function () {
       cy.get('#author').type('12345')
       cy.get('#url').type('sehroz.com')
       cy.get('#submitBlogButton').click()
-      cy.get('#showBlog').click()
+      cy.get('#sehroz').click()
 
       cy.get('#deleteBlogButton').click()
 
-      cy.contains('Deleted sehroz by 12345')
+      cy.contains('Deleted')
+    })
+
+    it('Blogs sorted by most liked', function () {
+      cy.get('#makeBlog').click()
+      cy.get('#title').type('sehroz')
+      cy.get('#author').type('12345')
+      cy.get('#url').type('sehroz.com')
+      cy.get('#submitBlogButton').click()
+
+      cy.get('#sehroz').click()
+
+      cy.get('#likesehroz').click()
+      cy.get('#likesehroz').click()
+
+      cy.get('#title').type('testt')
+      cy.get('#author').type('testst')
+      cy.get('#url').type('tsts.com')
+      cy.get('#submitBlogButton')
+        .click()
+        .then(() => {
+          cy.get('#testt').click()
+          cy.get('#liketestt').click()
+          cy.get('#liketestt').click()
+          cy.get('#liketestt').click()
+          cy.get('#liketestt').click()
+        })
+
+      cy.get('.likes:first').then(($like) => $like === 4)
     })
   })
 })
