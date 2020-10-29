@@ -26,10 +26,20 @@ export const addVote = (id) => {
   }
 }
 
+export const addAnec = (anecWords) => {
+  const newAnec = asObject(anecWords)
+  return {
+    type: 'ADD_ANEC',
+    data: newAnec,
+  }
+}
+
 const reducer = (state = initialState, action) => {
   console.log('state now: ', state)
   console.log('action', action)
   switch (action.type) {
+    case 'ADD_ANEC':
+      return state.concat(action.data)
     case 'ADD_VOTE':
       const id = action.data.id
       const anecToVote = state.find((anec) => anec.id === id)
