@@ -12,7 +12,7 @@ const AnecdoteForm = () => {
     e.target.anec.value = ''
     dispatch(addAnec(anecWords))
     dispatch(addNoti(`you created ${anecWords}`))
-    setInterval(() => dispatch(removeNoti()), 5000)
+    setTimeout(() => dispatch(removeNoti()), 5000)
   }
 
   return (
