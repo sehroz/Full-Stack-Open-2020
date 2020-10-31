@@ -1,13 +1,3 @@
-const getId = () => (100000 * Math.random()).toFixed(0)
-
-const asObject = (anecdote) => {
-  return {
-    content: anecdote,
-    id: getId(),
-    votes: 0,
-  }
-}
-
 export const addVote = (id) => {
   return {
     type: 'ADD_VOTE',
@@ -16,10 +6,9 @@ export const addVote = (id) => {
 }
 
 export const addAnec = (anecWords) => {
-  const newAnec = asObject(anecWords)
   return {
     type: 'ADD_ANEC',
-    data: newAnec,
+    data: anecWords,
   }
 }
 
