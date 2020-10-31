@@ -1,3 +1,5 @@
+import anecService from '../services/anecs'
+
 export const addVote = (id) => {
   return {
     type: 'ADD_VOTE',
@@ -12,10 +14,13 @@ export const addAnec = (anecWords) => {
   }
 }
 
-export const initializeAnecs = (anecs) => {
-  return {
-    type: 'INIT_ANECS',
-    data: anecs,
+export const initializeAnecs = () => {
+  return async (dispatch) => {
+    const anecs = await anecService.getAll()
+    dispatch({
+      type: 'INIT_ANECS',
+      data: anecs,
+    })
   }
 }
 
