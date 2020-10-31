@@ -7,8 +7,12 @@ const Notification = () => {
     border: 'solid',
     padding: 10,
     borderWidth: 1,
+    display: '',
   }
-  return <div style={style}>{notification}</div>
+  const hide = {
+    display: 'none',
+  }
+  return <div style={notification !== null ? style : hide}>{notification}</div>
 }
 
 export default Notification

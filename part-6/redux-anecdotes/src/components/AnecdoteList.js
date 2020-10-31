@@ -1,6 +1,7 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { addVote } from '../reducers/anecdoteReducer'
+import { addNoti, removeNoti } from '../reducers/notiReducer'
 
 const AnecdoteList = () => {
   const anecdotes = useSelector((state) => state.anecs)
@@ -8,6 +9,9 @@ const AnecdoteList = () => {
 
   const vote = (id) => {
     dispatch(addVote(id))
+    const voteFor = anecdotes.find((anec) => anec.id === id).content
+    dispatch(addNoti(`you voted ${voteFor}`))
+    setInterval(() => dispatch(removeNoti()), 5000)
   }
   return (
     <div>
