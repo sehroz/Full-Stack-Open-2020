@@ -8,9 +8,12 @@ export const addVote = (id) => {
 }
 
 export const addAnec = (anecWords) => {
-  return {
-    type: 'ADD_ANEC',
-    data: anecWords,
+  return async (dispatch) => {
+    const newAnec = await anecService.createAnec(anecWords)
+    dispatch({
+      type: 'ADD_ANEC',
+      data: newAnec,
+    })
   }
 }
 
