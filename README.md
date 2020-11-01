@@ -8,6 +8,7 @@
 - [Part 3: Programming a Server with NodeJS and Express](https://github.com/sehroz/full-stack-open-2020/tree/master/part-3)
 - [Part 4: Testing Express Servers, User Administration](https://github.com/sehroz/full-stack-open-2020/tree/master/part-4)
 - [Part 5: Testing React Apps](https://github.com/sehroz/full-stack-open-2020/tree/master/part-5)
+- [Part 6: State management with Redux](https://github.com/sehroz/full-stack-open-2020/tree/master/part-6)
 
 #
 
