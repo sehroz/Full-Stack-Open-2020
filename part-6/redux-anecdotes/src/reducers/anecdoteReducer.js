@@ -1,9 +1,16 @@
 import anecService from '../services/anecs'
 
 export const addVote = (id) => {
-  return {
-    type: 'ADD_VOTE',
-    data: { id },
+  return async (dispatch) => {
+    const anecs = await anecService.getAll()
+    const findAnec = anecs.find((anec) => anec.id === id)
+    const updatedAnec = { ...findAnec, votes: findAnec.votes + 1 }
+
+    const voteAnec = await anecService.addVote(id, updatedAnec)
+    dispatch({
+      type: 'ADD_VOTE',
+      data: voteAnec,
+    })
   }
 }
 

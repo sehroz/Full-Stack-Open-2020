@@ -14,6 +14,9 @@ const AnecdoteList = () => {
     dispatch(addNoti(`you voted ${voteFor}`))
     setTimeout(() => dispatch(removeNoti()), 5000)
   }
+
+
+  
   console.log(anecdotes)
   const filteredList = anecdotes
     .filter((anecdote) =>
