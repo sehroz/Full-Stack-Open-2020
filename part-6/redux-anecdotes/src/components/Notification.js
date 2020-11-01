@@ -12,7 +12,16 @@ const Notification = () => {
   const hide = {
     display: 'none',
   }
-  return <div style={notification !== null ? style : hide}>{notification}</div>
+
+  if (notification == null) {
+    return null
+  }
+
+  return (
+    <div style={notification.noti !== null ? style : hide}>
+      {notification.noti}
+    </div>
+  )
 }
 
 export default Notification

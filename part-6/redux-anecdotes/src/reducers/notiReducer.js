@@ -1,23 +1,34 @@
 const notiReducer = (state = null, action) => {
   switch (action.type) {
     case 'SET_NOTI':
-      return action.noti
+      return action.data
+    case 'CLEAR_NOTI':
+      return null
     default:
       return state
   }
 }
 
-export const addNoti = (noti) => {
-  return {
-    type: 'SET_NOTI',
-    noti,
+let timing = 0
+
+export const addNoti = (noti, time) => {
+  return async (dispatch) => {
+    dispatch({
+      type: 'SET_NOTI',
+      data: {
+        noti,
+        time,
+      },
+    })
+
+    clearTimeout(timing)
+
+    timing = setTimeout(() => {
+      dispatch({
+        type: 'CLEAR_NOTI',
+      })
+    }, time * 1000)
   }
 }
 
-export const removeNoti = () => {
-  return {
-    type: 'SET_NOTI',
-    noti: null,
-  }
-}
 export default notiReducer

@@ -1,7 +1,7 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
 import { addAnec } from '../reducers/anecdoteReducer'
-import { addNoti, removeNoti } from '../reducers/notiReducer'
+import { addNoti } from '../reducers/notiReducer'
 
 const AnecdoteForm = () => {
   const dispatch = useDispatch()
@@ -11,8 +11,7 @@ const AnecdoteForm = () => {
     const content = e.target.anec.value
     e.target.anec.value = ''
     dispatch(addAnec(content))
-    dispatch(addNoti(`you created ${content}`))
-    setTimeout(() => dispatch(removeNoti()), 5000)
+    dispatch(addNoti(`you created '${content}'`, 2))
   }
 
   return (
