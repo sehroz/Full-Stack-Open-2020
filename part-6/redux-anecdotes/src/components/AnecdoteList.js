@@ -10,7 +10,7 @@ const AnecdoteList = (props) => {
       `you voted '${
         props.filteredList.find((anec) => anec.id === id).content
       }'`,
-      10
+      5
     )
   }
 
