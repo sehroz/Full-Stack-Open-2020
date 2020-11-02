@@ -6,7 +6,7 @@ import {
   useRouteMatch,
   useHistory,
 } from 'react-router-dom'
-import useField from './hooks/index'
+import UseField from './hooks/index'
 const Menu = () => {
   const padding = {
     paddingRight: 5,
@@ -79,9 +79,9 @@ const Footer = () => (
 )
 
 const CreateNew = (props) => {
-  const content = useField('content')
-  const author = useField('author')
-  const info = useField('info')
+  const content = UseField('content')
+  const author = UseField('author')
+  const info = UseField('info')
 
   const history = useHistory()
   const handleSubmit = (e) => {
@@ -93,6 +93,12 @@ const CreateNew = (props) => {
       votes: 0,
     })
     history.push('/')
+  }
+
+  const handleReset = () => {
+    content.onReset()
+    author.onReset()
+    info.onReset()
   }
 
   return (
@@ -112,6 +118,9 @@ const CreateNew = (props) => {
           <input {...info} />
         </div>
         <button>create</button>
+        <button type='button' onClick={handleReset}>
+          reset
+        </button>
       </form>
     </div>
   )
