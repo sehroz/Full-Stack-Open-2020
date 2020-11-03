@@ -3,6 +3,8 @@ import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import { addNoti } from './reducers/notiReducer'
+import { addLike } from './reducers/blogReducer'
+import { deleteBlog } from './reducers/blogReducer'
 import { addNewBlog } from './reducers/blogReducer'
 import { initializeBlogs } from './reducers/blogReducer'
 import { connect } from 'react-redux'
@@ -10,12 +12,10 @@ import Notifcation from './components/Notifcation'
 import { useDispatch } from 'react-redux'
 import BlogForm from './components/BlogForm'
 import Togglable from './components/Toggable'
+import LoginForm from './components/LoginForm'
 
 const App = (props) => {
   const dispatch = useDispatch()
-
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
 
   useEffect(() => {
@@ -31,12 +31,11 @@ const App = (props) => {
     dispatch(initializeBlogs())
   }, [dispatch])
 
-  const handleLogin = async (event) => {
-    event.preventDefault()
+  const handleLogin = async (login) => {
     try {
       const user = await loginService.login({
-        username,
-        password,
+        username: login.username,
+        password: login.password,
       })
 
       window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
@@ -44,9 +43,6 @@ const App = (props) => {
       setUser(user)
 
       props.addNoti('Logged In!', 5)
-
-      setUsername('')
-      setPassword('')
     } catch (error) {
       props.addNoti(`${error.response.data.error}`, 5)
     }
@@ -57,34 +53,6 @@ const App = (props) => {
     setUser(null)
     props.addNoti('Logged Out!', 5)
   }
-
-  const loginForm = () => (
-    <form onSubmit={handleLogin}>
-      <div>
-        username
-        <input
-          type='text'
-          id='username'
-          value={username}
-          name='Username'
-          onChange={({ target }) => setUsername(target.value)}
-        />
-      </div>
-      <div>
-        password
-        <input
-          type='password'
-          id='password'
-          value={password}
-          name='Password'
-          onChange={({ target }) => setPassword(target.value)}
-        />
-      </div>
-      <button id='login-button' type='submit'>
-        login
-      </button>
-    </form>
-  )
 
   const addBlog = async (blogObj) => {
     const returnedBlog = await props.addNewBlog(blogObj)
@@ -97,27 +65,15 @@ const App = (props) => {
 
   const handleLike = async (id) => {
     const findBlog = props.blogs.find((blog) => blog.id === id)
-
-    const newBlog = {
-      ...findBlog,
-      likes: findBlog.likes + 1,
-      user: findBlog.user.id,
-    }
-
-    await blogService.like(newBlog)
-
-    const updatedBlogs = props.blogs.map((blog) =>
-      blog.id === id ? { ...findBlog, likes: findBlog.likes + 1 } : blog
-    )
-
+    props.addLike(id)
     props.addNoti(`Liked ${findBlog.title}`, 5)
   }
 
   const deleteBlog = async (id) => {
     const blog = props.blogs.find((blog) => blog.id === id)
     if (window.confirm(`Remove ${blog.title} by ${blog.author}`)) {
-      await blogService.deleteIt(id)
-      const updatedBlogs = props.blogs.filter((blog) => blog.id !== id)
+      await props.deleteBlog(id)
+
       props.addNoti(`Deleted ${blog.title} by ${blog.author}`, 5)
     }
   }
@@ -163,7 +119,7 @@ const App = (props) => {
           ))}
         </>
       ) : (
-        <>{loginForm()}</>
+        <LoginForm handleLogin={handleLogin} />
       )}
     </div>
   )
@@ -178,6 +134,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = {
   addNewBlog,
   addNoti,
+  addLike,
+  deleteBlog,
 }
 
 const ConnectedBlogs = connect(mapStateToProps, mapDispatchToProps)(App)
