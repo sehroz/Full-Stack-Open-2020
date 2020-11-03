@@ -3,17 +3,20 @@ import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import { addNoti } from './reducers/notiReducer'
+import { addNewBlog } from './reducers/blogReducer'
+import { initializeBlogs } from './reducers/blogReducer'
 import { connect } from 'react-redux'
 import Notifcation from './components/Notifcation'
-
+import { useDispatch } from 'react-redux'
 import BlogForm from './components/BlogForm'
 import Togglable from './components/Toggable'
 
 const App = (props) => {
+  const dispatch = useDispatch()
+
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [blogs, setBlogs] = useState([])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
@@ -25,13 +28,8 @@ const App = (props) => {
   }, [])
 
   useEffect(() => {
-    blogService
-      .getAll()
-      .then((blogs) => setBlogs(blogs))
-      .catch((err) => {
-        props.addNoti('Did Not Get Blogs!', 5)
-      })
-  }, [props])
+    dispatch(initializeBlogs())
+  }, [dispatch])
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -89,8 +87,7 @@ const App = (props) => {
   )
 
   const addBlog = async (blogObj) => {
-    const returnedBlog = await blogService.create(blogObj)
-    setBlogs(blogs.concat(returnedBlog))
+    const returnedBlog = await props.addNewBlog(blogObj)
 
     props.addNoti(
       `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`,
@@ -99,7 +96,7 @@ const App = (props) => {
   }
 
   const handleLike = async (id) => {
-    const findBlog = blogs.find((blog) => blog.id === id)
+    const findBlog = props.blogs.find((blog) => blog.id === id)
 
     const newBlog = {
       ...findBlog,
@@ -109,23 +106,19 @@ const App = (props) => {
 
     await blogService.like(newBlog)
 
-    const updatedBlogs = blogs.map((blog) =>
+    const updatedBlogs = props.blogs.map((blog) =>
       blog.id === id ? { ...findBlog, likes: findBlog.likes + 1 } : blog
     )
-
-    setBlogs(updatedBlogs)
 
     props.addNoti(`Liked ${findBlog.title}`, 5)
   }
 
   const deleteBlog = async (id) => {
-    const blog = blogs.find((blog) => blog.id === id)
+    const blog = props.blogs.find((blog) => blog.id === id)
     if (window.confirm(`Remove ${blog.title} by ${blog.author}`)) {
       await blogService.deleteIt(id)
-      const updatedBlogs = blogs.filter((blog) => blog.id !== id)
+      const updatedBlogs = props.blogs.filter((blog) => blog.id !== id)
       props.addNoti(`Deleted ${blog.title} by ${blog.author}`, 5)
-
-      setBlogs(updatedBlogs)
     }
   }
 
@@ -159,17 +152,15 @@ const App = (props) => {
           </h3>
 
           {blogForm()}
-          {blogs
-            .sort((a, b) => b.likes - a.likes)
-            .map((blog) => (
-              <Blog
-                key={blog.id}
-                blog={blog}
-                handleLike={handleLike}
-                deleteBlog={deleteBlog}
-                user={user.username}
-              />
-            ))}
+          {props.blogs.map((blog) => (
+            <Blog
+              key={blog.id}
+              blog={blog}
+              handleLike={handleLike}
+              deleteBlog={deleteBlog}
+              user={user.username}
+            />
+          ))}
         </>
       ) : (
         <>{loginForm()}</>
@@ -178,4 +169,17 @@ const App = (props) => {
   )
 }
 
-export default connect(null, { addNoti })(App)
+const mapStateToProps = (state) => {
+  return {
+    blogs: state.blogs,
+  }
+}
+
+const mapDispatchToProps = {
+  addNewBlog,
+  addNoti,
+}
+
+const ConnectedBlogs = connect(mapStateToProps, mapDispatchToProps)(App)
+
+export default ConnectedBlogs

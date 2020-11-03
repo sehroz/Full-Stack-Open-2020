@@ -13,7 +13,7 @@ const Notification = () => {
     display: 'none',
   }
 
-  if (notification == null) {
+  if (notification === null) {
     return null
   }
 
