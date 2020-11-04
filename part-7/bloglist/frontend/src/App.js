@@ -1,11 +1,12 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import Blog from './components/Blog'
-import blogService from './services/blogs'
-import loginService from './services/login'
+import { login } from './reducers/loginReducer'
+import { logout } from './reducers/loginReducer'
 import { addNoti } from './reducers/notiReducer'
 import { addLike } from './reducers/blogReducer'
 import { deleteBlog } from './reducers/blogReducer'
 import { addNewBlog } from './reducers/blogReducer'
+import { checkUser } from './reducers/loginReducer'
 import { initializeBlogs } from './reducers/blogReducer'
 import { connect } from 'react-redux'
 import Notifcation from './components/Notifcation'
@@ -16,16 +17,10 @@ import LoginForm from './components/LoginForm'
 
 const App = (props) => {
   const dispatch = useDispatch()
-  const [user, setUser] = useState(null)
 
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
-    if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON)
-      setUser(user)
-      blogService.setToken(user.token)
-    }
-  }, [])
+    dispatch(checkUser())
+  }, [dispatch])
 
   useEffect(() => {
     dispatch(initializeBlogs())
@@ -33,14 +28,10 @@ const App = (props) => {
 
   const handleLogin = async (login) => {
     try {
-      const user = await loginService.login({
+      await props.login({
         username: login.username,
         password: login.password,
       })
-
-      window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
-      blogService.setToken(user.token)
-      setUser(user)
 
       props.addNoti('Logged In!', 5)
     } catch (error) {
@@ -50,7 +41,7 @@ const App = (props) => {
 
   const handleLogout = () => {
     window.localStorage.clear()
-    setUser(null)
+    props.logout()
     props.addNoti('Logged Out!', 5)
   }
 
@@ -96,14 +87,15 @@ const App = (props) => {
       </>
     )
   }
+  console.log(props.user)
   return (
     <div>
       <h2>blogs</h2>
       <Notifcation />
-      {user ? (
+      {props.user && props.user.username ? (
         <>
           <h3>
-            {user.username} logged in{' '}
+            {props.user.username} logged in{' '}
             <button onClick={handleLogout}>logout</button>
           </h3>
 
@@ -114,7 +106,7 @@ const App = (props) => {
               blog={blog}
               handleLike={handleLike}
               deleteBlog={deleteBlog}
-              user={user.username}
+              user={props.user.username}
             />
           ))}
         </>
@@ -128,6 +120,7 @@ const App = (props) => {
 const mapStateToProps = (state) => {
   return {
     blogs: state.blogs,
+    user: state.user,
   }
 }
 
@@ -135,7 +128,10 @@ const mapDispatchToProps = {
   addNewBlog,
   addNoti,
   addLike,
+  login,
+  logout,
   deleteBlog,
+  checkUser,
 }
 
 const ConnectedBlogs = connect(mapStateToProps, mapDispatchToProps)(App)
