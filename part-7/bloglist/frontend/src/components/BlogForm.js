@@ -1,7 +1,9 @@
-import React, { useState } from 'react'
-import PropTypes from 'prop-types'
-
-const BlogForm = ({ createBlog, toggleExpanded }) => {
+import React, { useState, useRef } from 'react'
+import { addNewBlog } from '../reducers/blogReducer'
+import { connect } from 'react-redux'
+import { addNoti } from '../reducers/notiReducer'
+import Togglable from '../components/Toggable'
+const BlogForm = (props) => {
   const [newBlog, setNewBlog] = useState({
     title: '',
     author: '',
@@ -14,17 +16,27 @@ const BlogForm = ({ createBlog, toggleExpanded }) => {
 
   const addBlog = async (event) => {
     event.preventDefault()
-    createBlog({
+
+    setNewBlog({ title: '', author: '', url: '' })
+    const returnedBlog = await props.addNewBlog({
       title: newBlog.title,
       author: newBlog.author,
       url: newBlog.url,
     })
 
-    setNewBlog({ title: '', author: '', url: '' })
+    props.addNoti(
+      `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`,
+      5
+    )
+  }
+
+  const blogDetailRef = useRef()
+  const toggleExpanded = () => {
+    blogDetailRef.current.toggleVisibility()
   }
 
   return (
-    <>
+    <Togglable buttonLabel='new Blog' buttonId='makeBlog' ref={blogDetailRef}>
       <form id='form' onSubmit={addBlog}>
         <h2>create new</h2>
         <div>
@@ -60,11 +72,19 @@ const BlogForm = ({ createBlog, toggleExpanded }) => {
         </button>
       </form>
       <button onClick={toggleExpanded}>cancel</button>
-    </>
+    </Togglable>
   )
 }
-BlogForm.propTypes = {
-  createBlog: PropTypes.func.isRequired,
+
+const mapStateToProps = () => {
+  return {}
 }
 
-export default BlogForm
+const mapDispatchToProps = {
+  addNewBlog,
+  addNoti,
+}
+
+const ConnectedBlogs = connect(mapStateToProps, mapDispatchToProps)(BlogForm)
+
+export default ConnectedBlogs

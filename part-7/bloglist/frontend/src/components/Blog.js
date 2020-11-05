@@ -1,45 +1,56 @@
-import React, { useRef, useState } from 'react'
+import React from 'react'
+import { connect } from 'react-redux'
+import { addLike, deleteBlog } from '../reducers/blogReducer'
+import { addNoti } from '../reducers/notiReducer'
+import { BlogDetail } from './BlogDetail'
 
-import Togglable from './Toggable'
-
-const Blog = ({ blog, handleLike, deleteBlog, user }) => {
-  const [open, setOpen] = useState(false)
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5,
+const Blog = (props) => {
+  const handleLike = async (id) => {
+    const findBlog = props.blogs.find((blog) => blog.id === id)
+    props.addLike(id)
+    props.addNoti(`Liked ${findBlog.title}`, 5)
   }
-  const blogDetailRef = useRef()
-  const toggleExpanded = () => {
-    blogDetailRef.current.toggleVisibility()
-    setOpen(!open)
+
+  const deleteBlog = async (id) => {
+    console.log(id)
+    console.log(props)
+    const blog = props.blogs.find((blog) => blog.id === id)
+    if (window.confirm(`Remove ${blog.title} by ${blog.author}`)) {
+      await props.deleteBlog(id)
+
+      props.addNoti(`Deleted ${blog.title} by ${blog.author}`, 5)
+    }
   }
 
   return (
-    <div className='blog' style={blogStyle}>
-      {blog.title} {blog.author}
-      <button onClick={toggleExpanded} className='viewButton' id={blog.title}>
-        {open ? 'hide' : 'view'}
-      </button>
-      <Togglable ref={blogDetailRef} buttonLabel=''>
-        <div> {blog.url} </div>
-        <div className='likes'>
-          {blog.likes}
-          <button id={'like' + blog.title} onClick={() => handleLike(blog.id)}>
-            like
-          </button>
-          {blog.user.username}
-          {blog.user.username === user ? (
-            <button id='deleteBlogButton' onClick={() => deleteBlog(blog.id)}>
-              remove
-            </button>
-          ) : null}
+    <>
+      {props.blogs.map((blog) => (
+        <div key={blog.id}>
+          <BlogDetail
+            handleLike={handleLike}
+            deleteBlog={deleteBlog}
+            user={props.user}
+            blog={blog}
+          />
         </div>
-      </Togglable>
-    </div>
+      ))}
+    </>
   )
 }
 
-export default Blog
+const mapStateToProps = (state) => {
+  return {
+    blogs: state.blogs,
+    user: state.user,
+  }
+}
+
+const mapDispatchToProps = {
+  addLike,
+  addNoti,
+  deleteBlog,
+}
+
+const ConnectedBlog = connect(mapStateToProps, mapDispatchToProps)(Blog)
+
+export default ConnectedBlog
