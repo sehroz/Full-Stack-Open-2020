@@ -23,6 +23,7 @@ blogsRouter.post('/', async (request, response) => {
     likes: request.body.likes === undefined ? 0 : request.body.likes,
     author: request.body.author,
     url: request.body.url,
+    comments: request.body.comments,
   })
 
   if (!blog.title || !blog.url) {
@@ -61,20 +62,23 @@ blogsRouter.delete('/:id', async (req, res) => {
 })
 
 blogsRouter.put('/:id', async (req, res) => {
-  const { author, title, url, likes } = req.body
+  const blog = req.body
+  blog.user = blog.user.id
 
-  const request = await Blog.findByIdAndUpdate(
-    req.params.id,
-    {
-      author,
-      title,
-      url,
-      likes,
-    },
-    { new: true }
+  const request = await Blog.findByIdAndUpdate(req.params.id, blog).populate(
+    'user'
   )
 
   res.json(request)
+})
+
+blogsRouter.post('/:id/comments', async (req, res) => {
+  const blog = await Blog.findById(req.params.id)
+
+  blog.comments = blog.comments.concat(req.body.comment)
+  await blog.save()
+
+  res.json(blog)
 })
 
 module.exports = blogsRouter

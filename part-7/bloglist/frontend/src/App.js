@@ -51,9 +51,9 @@ const App = (props) => {
     const blog = props.blogs.find((blog) => blog.id === id)
     if (window.confirm(`Remove ${blog.title} by ${blog.author}`)) {
       await props.deleteBlog(id)
-
       props.addNoti(`Deleted ${blog.title} by ${blog.author}`, 5)
     }
+    history.push('/')
   }
   const blog = blogmatch
     ? props.blogs.find((blog) => blog.id === blogmatch.params.id)

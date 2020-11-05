@@ -1,9 +1,8 @@
-POST http://localhost:3001/api/users
+POST http://localhost:3001/api/blogs/5fa38afe56bffb0e94bb446f/comments
 Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNlaHJveiIsImlkIjoiNWZhMzYzMmYzY2M4NzQxODhjNDU2MTQ2IiwiaWF0IjoxNjA0NTUxODE2fQ.5FAWDKWVsfiuX8fbu2b3TCdP9T3peNULUPCY86bqb5o
 
 {
-    "password":"12345",
-    "username": "sehroz",
-    "name":"sehroz"
+    "comment":"NEW COMMENT WOW"
 }
  

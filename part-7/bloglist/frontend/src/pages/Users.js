@@ -1,9 +1,17 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
+import { useDispatch } from 'react-redux'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 
+import { getUsers } from '../reducers/userReducer'
 const Users = (props) => {
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(getUsers())
+  }, [dispatch])
+
   return (
     <div>
       <h2>Users</h2>

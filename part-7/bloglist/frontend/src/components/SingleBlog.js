@@ -20,6 +20,12 @@ export const SingleBlog = ({ blog, user, handleLike, deleteBlog }) => {
         ) : null}
       </div>
       <p>added by {blog.author}</p>
+      <h2>comments</h2>
+      <ul>
+        {blog.comments.map((comment, i) => (
+          <li key={i}>{comment}</li>
+        ))}{' '}
+      </ul>
     </div>
   )
 }
