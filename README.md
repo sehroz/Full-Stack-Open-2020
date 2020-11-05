@@ -9,6 +9,7 @@
 - [Part 4: Testing Express Servers, User Administration](https://github.com/sehroz/full-stack-open-2020/tree/master/part-4)
 - [Part 5: Testing React Apps](https://github.com/sehroz/full-stack-open-2020/tree/master/part-5)
 - [Part 6: State management with Redux](https://github.com/sehroz/full-stack-open-2020/tree/master/part-6)
+- [Part 7: React Router, Custom Hooks, Styling App with CSS and Webpack](https://github.com/sehroz/full-stack-open-2020/tree/master/part-7)
 
 #
 
