@@ -1,8 +1,19 @@
-import React from 'react'
+import React, { useState } from 'react'
 
-export const SingleBlog = ({ blog, user, handleLike, deleteBlog }) => {
+const SingleBlog = ({ blog, user, handleLike, deleteBlog, handleComment }) => {
+  const [comment, setComment] = useState('')
+
   if (!blog) {
     return null
+  }
+
+  const handleChange = (e) => {
+    setComment(e.target.value)
+  }
+
+  const addCom = (e) => {
+    e.preventDefault()
+    handleComment(blog.id, comment)
   }
   return (
     <div>
@@ -21,6 +32,21 @@ export const SingleBlog = ({ blog, user, handleLike, deleteBlog }) => {
       </div>
       <p>added by {blog.author}</p>
       <h2>comments</h2>
+      <form id='form' onSubmit={addCom}>
+        <h2>create new</h2>
+        <div>
+          comment:
+          <input
+            id='title'
+            value={comment}
+            name='comment'
+            onChange={handleChange}
+          />
+          <button id='submitCommentButton' type='submit'>
+            add comment
+          </button>
+        </div>
+      </form>
       <ul>
         {blog.comments.map((comment, i) => (
           <li key={i}>{comment}</li>

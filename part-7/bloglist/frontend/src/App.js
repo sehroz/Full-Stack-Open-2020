@@ -1,7 +1,12 @@
 import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { checkUser, logout } from './reducers/loginReducer'
-import { initializeBlogs, addLike, deleteBlog } from './reducers/blogReducer'
+import {
+  initializeBlogs,
+  addLike,
+  deleteBlog,
+  addComment,
+} from './reducers/blogReducer'
 import { addNoti } from './reducers/notiReducer'
 import SingleUser from './components/SingleUser'
 import { connect } from 'react-redux'
@@ -45,6 +50,11 @@ const App = (props) => {
     props.addNoti(`Liked ${findBlog.title}`, 5)
   }
 
+  const handleComment = async (id, comment) => {
+    props.addComment(id, comment)
+    props.addNoti('Added Comment!', 5)
+  }
+
   const deleteBlog = async (id) => {
     console.log(id)
     console.log(props)
@@ -55,6 +65,7 @@ const App = (props) => {
     }
     history.push('/')
   }
+
   const blog = blogmatch
     ? props.blogs.find((blog) => blog.id === blogmatch.params.id)
     : null
@@ -72,6 +83,7 @@ const App = (props) => {
           <SingleBlog
             handleLike={handleLike}
             deleteBlog={deleteBlog}
+            handleComment={handleComment}
             blog={blog}
             user={props.user}
           />
@@ -102,6 +114,7 @@ const mapDispatchToProps = {
   addLike,
   addNoti,
   deleteBlog,
+  addComment,
 }
 
 const ConnectedBlogs = connect(mapStateToProps, mapDispatchToProps)(App)
