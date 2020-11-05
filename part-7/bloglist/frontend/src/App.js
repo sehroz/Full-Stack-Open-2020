@@ -7,6 +7,7 @@ import {
   deleteBlog,
   addComment,
 } from './reducers/blogReducer'
+import './App.css'
 import { addNoti } from './reducers/notiReducer'
 import SingleUser from './components/SingleUser'
 import { connect } from 'react-redux'
@@ -21,28 +22,26 @@ import Nav from './components/Nav'
 const App = (props) => {
   const dispatch = useDispatch()
   const history = useHistory()
+  const blogmatch = useRouteMatch('/blogs/:id')
+  const usermatch = useRouteMatch('/users/:id')
   useEffect(() => {
     dispatch(checkUser())
     dispatch(initializeBlogs())
     dispatch(getUsers())
   }, [dispatch])
 
+  if (props.user === null) {
+    return (
+      <>
+        <LoginForm />
+      </>
+    )
+  }
+
   const handleLogout = () => {
     window.localStorage.clear()
     props.logout()
     history.push('/')
-  }
-
-  const blogmatch = useRouteMatch('/blogs/:id')
-  const usermatch = useRouteMatch('/users/:id')
-  if (props.user === null) {
-    return (
-      <div>
-        <h2>Login</h2>
-        <Notifcation />
-        <LoginForm />
-      </div>
-    )
   }
   const handleLike = async (id) => {
     const findBlog = props.blogs.find((blog) => blog.id === id)
@@ -73,6 +72,7 @@ const App = (props) => {
   const singleUser = usermatch
     ? props.users.find((user) => user.id === usermatch.params.id)
     : null
+
   return (
     <>
       <Nav handleLogout={handleLogout} user={props.user} />
@@ -117,6 +117,6 @@ const mapDispatchToProps = {
   addComment,
 }
 
-const ConnectedBlogs = connect(mapStateToProps, mapDispatchToProps)(App)
+const ConnectedApp = connect(mapStateToProps, mapDispatchToProps)(App)
 
-export default ConnectedBlogs
+export default ConnectedApp
