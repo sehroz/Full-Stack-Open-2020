@@ -6,15 +6,16 @@ import { addNoti } from './reducers/notiReducer'
 import SingleUser from './components/SingleUser'
 import { connect } from 'react-redux'
 import { LoginForm, Notifcation, SingleBlog } from './components/index.js'
-import { Switch, Route, useRouteMatch } from 'react-router-dom'
+import { Switch, Route, useRouteMatch, useHistory } from 'react-router-dom'
 import Home from './pages/Home'
 import Users from './pages/Users'
 
 import { getUsers } from './reducers/userReducer'
+import Nav from './components/Nav'
 
 const App = (props) => {
   const dispatch = useDispatch()
-
+  const history = useHistory()
   useEffect(() => {
     dispatch(checkUser())
     dispatch(initializeBlogs())
@@ -24,6 +25,7 @@ const App = (props) => {
   const handleLogout = () => {
     window.localStorage.clear()
     props.logout()
+    history.push('/')
   }
 
   const blogmatch = useRouteMatch('/blogs/:id')
@@ -62,12 +64,9 @@ const App = (props) => {
     : null
   return (
     <>
-      <h2>blogs</h2>
+      <Nav handleLogout={handleLogout} user={props.user} />
       <Notifcation />
-      <h3>
-        {props.user.username} logged in
-        <button onClick={handleLogout}>logout</button>
-      </h3>
+      <h1>blogs app</h1>
       <Switch>
         <Route path='/blogs/:id'>
           <SingleBlog
