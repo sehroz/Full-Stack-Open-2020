@@ -6,11 +6,12 @@ const Notification = () => {
   const style = {
     border: 'solid',
     padding: 10,
+    color: 'grey',
     borderWidth: 1,
-    display: '',
+    visiblity: 'visible',
   }
   const hide = {
-    display: 'none',
+    visiblity: 'hidden',
   }
 
   if (notification === null) {

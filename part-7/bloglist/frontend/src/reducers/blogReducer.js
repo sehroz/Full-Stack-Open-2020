@@ -57,7 +57,7 @@ const blogReducer = (state = [], action) => {
     case 'ADD_BLOG':
       return state.concat(action.data)
     case 'INIT_BLOGS':
-      return action.data
+      return action.data.sort((a, b) => b.likes - a.likes)
     case 'DELETE_BLOG':
       const deleteId = action.data
       return state.filter((blog) => blog.id !== deleteId)

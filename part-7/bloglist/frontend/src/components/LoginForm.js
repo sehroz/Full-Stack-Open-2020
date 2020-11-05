@@ -12,6 +12,8 @@ import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
 import { Notifcation } from '.'
 
+import { useHistory } from 'react-router-dom'
+
 const useStyles = makeStyles((theme) => ({
   root: {
     height: '100vh',
@@ -84,13 +86,14 @@ const LoginForm = (props) => {
     handleLogin({ username, password })
   }
 
+  const history = useHistory()
   const handleLogin = async (login) => {
     try {
       await props.login({
         username: login.username,
         password: login.password,
       })
-
+      history.push('/home')
       props.addNoti('Logged In!', 5)
     } catch (error) {
       props.addNoti(`${error.response.data.error}`, 5)

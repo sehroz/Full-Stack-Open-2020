@@ -30,14 +30,6 @@ const App = (props) => {
     dispatch(getUsers())
   }, [dispatch])
 
-  if (props.user === null) {
-    return (
-      <>
-        <LoginForm />
-      </>
-    )
-  }
-
   const handleLogout = () => {
     window.localStorage.clear()
     props.logout()
@@ -62,7 +54,7 @@ const App = (props) => {
       await props.deleteBlog(id)
       props.addNoti(`Deleted ${blog.title} by ${blog.author}`, 5)
     }
-    history.push('/')
+    history.push('/home')
   }
 
   const blog = blogmatch
@@ -72,12 +64,15 @@ const App = (props) => {
   const singleUser = usermatch
     ? props.users.find((user) => user.id === usermatch.params.id)
     : null
-
   return (
     <>
-      <Nav handleLogout={handleLogout} user={props.user} />
-      <Notifcation />
-      <h1>blogs app</h1>
+      {props.user !== null && props.user.username ? (
+        <>
+          <Nav handleLogout={handleLogout} user={props.user} />
+          <Notifcation />
+        </>
+      ) : null}
+
       <Switch>
         <Route path='/blogs/:id'>
           <SingleBlog
@@ -94,8 +89,11 @@ const App = (props) => {
         <Route path='/users'>
           <Users />
         </Route>
-        <Route path='/'>
+        <Route path='/home'>
           <Home />
+        </Route>
+        <Route path='/'>
+          <LoginForm />
         </Route>
       </Switch>
     </>

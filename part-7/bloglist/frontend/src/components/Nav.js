@@ -24,7 +24,7 @@ const Nav = ({ handleLogout, user }) => {
       <AppBar position='static' className={classes.root}>
         <Toolbar>
           <Button className={classes.butto} color='inherit'>
-            <Link to='/'>blogs</Link>
+            <Link to='/home'>blogs</Link>
           </Button>
           <Button className={classes.butto} color='inherit'>
             <Link to='/users'>users</Link>
