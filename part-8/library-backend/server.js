@@ -42,6 +42,13 @@ let books = [
     genres: ['agile', 'patterns', 'design'],
   },
   {
+    title: 'Cookies',
+    published: 1991,
+    author: 'Robert Martin',
+    id: 'afa5b6f5-344d-11e9-a414-719c6709cf3e',
+    genres: ['agile', 'patterns', 'design'],
+  },
+  {
     title: 'Refactoring, edition 2',
     published: 2018,
     author: 'Martin Fowler',
@@ -88,10 +95,16 @@ const typeDefs = gql`
     id: ID!
   }
 
+  type Author {
+    name: String!
+    bookCount: Int
+  }
+
   type Query {
     authorCount: Int!
     bookCount: Int!
     allBooks: [Book!]!
+    allAuthors: [Author!]
   }
 `
 
@@ -100,6 +113,16 @@ const resolvers = {
     authorCount: () => authors.length,
     bookCount: () => books.length,
     allBooks: () => books,
+    allAuthors: () => authors,
+  },
+  Author: {
+    name: (root) => {
+      return root.name
+    },
+    bookCount: (root) => {
+      const count = books.filter((author) => author.author === root.name).length
+      return count
+    },
   },
 }
 
