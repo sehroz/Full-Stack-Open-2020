@@ -1,4 +1,4 @@
-const { ApolloServer, gql } = require("apollo-server");
+const { ApolloServer, UserInputError, gql } = require("apollo-server");
 const { v1: uuid } = require("uuid");
 
 let authors = [
@@ -108,6 +108,8 @@ const typeDefs = gql`
       author: String!
       genres: [String]
     ): Book
+
+    editAuthor(name: String, born: Int): Author
   }
 
   type Query {
@@ -157,6 +159,18 @@ const resolvers = {
       const book = { ...args, id: uuid() };
       books = books.concat(book);
       return book;
+    },
+    editAuthor: (root, args) => {
+      const author = authors.find((author) => author.name === args.name);
+      if (!author) {
+        return null;
+      }
+
+      const updatedAuthor = { ...author, born: args.born };
+      authors = authors.map((author) =>
+        author.name === author.name ? updatedAuthor : author
+      );
+      return updatedAuthor;
     },
   },
 };
