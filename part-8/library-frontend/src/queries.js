@@ -17,6 +17,7 @@ export const ADD_BOOK = gql`
       title
       published
       genres
+      id
     }
   }
 `;
@@ -27,6 +28,7 @@ export const ALL_AUTHORS = gql`
       name
       born
       bookCount
+      id
     }
   }
 `;
@@ -37,6 +39,17 @@ export const ALL_BOOKS = gql`
       title
       author
       published
+      id
+    }
+  }
+`;
+
+export const EDIT_AUTHOR = gql`
+  mutation editAuthor($name: String!, $born: Int!) {
+    editAuthor(name: $name, born: $born) {
+      name
+      born
+      id
     }
   }
 `;
