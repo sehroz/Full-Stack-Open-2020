@@ -14,13 +14,25 @@ const ALL_AUTHORS = gql`
   }
 `;
 
+const ALL_BOOKS = gql`
+  query {
+    allBooks {
+      title
+      author
+      published
+    }
+  }
+`;
+
 const App = () => {
   const [page, setPage] = useState("authors");
-  const result = useQuery(ALL_AUTHORS);
+  const authorData = useQuery(ALL_AUTHORS);
+  const bookData = useQuery(ALL_BOOKS);
 
-  if (result.loading) {
+  if (authorData.loading || bookData.loading) {
     return <div>loading...</div>;
   }
+
   return (
     <div>
       <div>
@@ -29,9 +41,9 @@ const App = () => {
         <button onClick={() => setPage("add")}>add book</button>
       </div>
 
-      <Authors show={page === "authors"} authors={result.data.allAuthors} />
+      <Authors show={page === "authors"} authors={authorData.data.allAuthors} />
 
-      <Books show={page === "books"} />
+      <Books show={page === "books"} books={bookData.data.allBooks} />
 
       <NewBook show={page === "add"} />
     </div>

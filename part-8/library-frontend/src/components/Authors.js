@@ -5,7 +5,6 @@ const Authors = (props) => {
     return null;
   }
   const authors = props.authors;
-  console.log(authors);
   return (
     <div>
       <h2>authors</h2>
