@@ -58,21 +58,24 @@ const typeDefs = gql`
 
 const findIt = async (name) => {
   let author = await Author.findOne({ name });
-
   if (!author) {
     author = new Author({ name });
     await author.save();
   }
-
   return author;
 };
 
+let books;
 const resolvers = {
   Query: {
     authorCount: () => Author.countDocuments(),
     bookCount: () => Book.countDocuments(),
     allBooks: async (root, args) => {
       const query = {};
+      console.log(args);
+      if (args.genre) {
+        query.genres = { $in: [genre] };
+      }
 
       if (args.author) {
         const authorer = await Author.findOne({ name: args.author });
@@ -81,14 +84,21 @@ const resolvers = {
 
       return Book.find(query).populate("author");
     },
-    allAuthors: async () => {
+    allAuthors: async (root, args) => {
+      books = await Book.find();
       return Author.find({});
     },
   },
   Author: {
     bookCount: async (root) => {
-      books.filter((author) => String(author.author) === String(root.id))
-        .length;
+      let count = books.filter(
+        (author) => String(author.author) === String(root.id)
+      ).length;
+      console.log(root);
+      if (!count) {
+        count = 0;
+      }
+      return count;
     },
   },
   Mutation: {
@@ -102,17 +112,11 @@ const resolvers = {
 
       return book;
     },
-    editAuthor: (root, args) => {
-      const author = authors.find((author) => author.name === args.name);
-      if (!author) {
-        return null;
-      }
+    editAuthor: async (root, { name, born }) => {
+      const author = await Author.findOne({ name });
 
-      const updatedAuthor = { ...author, born: args.born };
-      authors = authors.map((author) =>
-        author.name === args.name ? updatedAuthor : author
-      );
-      return updatedAuthor;
+      author.born = born;
+      return author.save();
     },
   },
 };

@@ -14,6 +14,7 @@ const App = () => {
     return <div>loading...</div>;
   }
 
+  console.log(bookData);
   return (
     <div>
       <div>
@@ -24,7 +25,7 @@ const App = () => {
 
       <Authors show={page === "authors"} authors={authorData.data.allAuthors} />
 
-      {/* <Books show={page === "books"} books={bookData.data.allBooks} /> */}
+      <Books show={page === "books"} books={bookData.data.allBooks} />
 
       <NewBook show={page === "add"} />
     </div>
