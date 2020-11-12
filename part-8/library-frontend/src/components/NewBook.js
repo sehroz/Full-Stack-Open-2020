@@ -14,6 +14,22 @@ const NewBook = (props) => {
     onError: (error) => {
       notify(error.graphQLErrors[0].message);
     },
+    update: (store, response) => {
+      genres.forEach((genre) => {
+        const dataInStore = store.readQuery({
+          query: ALL_BOOKS,
+          variables: { genre },
+        });
+
+        store.writeQuery({
+          query: ALL_BOOKS,
+          variables: { genre },
+          data: {
+            allBooks: [...dataInStore.allBooks].concat(response.data.addBook),
+          },
+        });
+      });
+    },
   });
 
   if (!props.show) {
