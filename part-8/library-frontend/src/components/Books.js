@@ -1,21 +1,47 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useQuery, useLazyQuery } from "@apollo/client";
+import { ALL_BOOKS } from "../queries";
 
 const Books = (props) => {
   const [genre, setGenre] = useState(null);
+  const allBooks = useQuery(ALL_BOOKS);
+  const [genreBooks, genreBooksResult] = useLazyQuery(ALL_BOOKS);
+  const [books, setBooks] = useState(null);
+  const [genres, setGenres] = useState([]);
+
+  useEffect(() => {
+    if (allBooks.data && allBooks.data.allBooks && !genre) {
+      let books = allBooks.data.allBooks;
+      setBooks(books);
+
+      const genreItems = books.map((a) => a.genres.map((g) => g)).flat();
+      const uniqueItems = Array.from(new Set(genreItems));
+
+      setGenres(uniqueItems);
+      console.log("ok");
+    }
+  }, [allBooks.data, genre]);
+
+  useEffect(() => {
+    if (genreBooksResult.data) {
+      setBooks(genreBooksResult.data.allBooks);
+    }
+  }, [genreBooksResult.data]);
+
   if (!props.show) {
     return null;
   }
 
-  const books = props.books;
+  const onGenreClick = (newGenre) => {
+    setGenre(newGenre);
+    genreBooks({
+      variables: {
+        genre: newGenre,
+      },
+    });
+  };
 
-  var genreItems = books.map((a) => a.genres.map((g) => g)).flat();
-
-  var uniqueItems = Array.from(new Set(genreItems));
-
-  const showBooks = genre
-    ? books.filter((book) => book.genres.includes(genre))
-    : books;
-
+  console.log(genreBooksResult);
   return (
     <div>
       <h2>books</h2>
@@ -27,17 +53,18 @@ const Books = (props) => {
             <th>author</th>
             <th>published</th>
           </tr>
-          {showBooks.map((a) => (
-            <tr key={a.id}>
-              <td>{a.title}</td>
-              <td>{a.author.name}</td>
-              <td>{a.published}</td>
-            </tr>
-          ))}
+          {books !== null &&
+            books.map((a) => (
+              <tr key={a.id}>
+                <td>{a.title}</td>
+                <td>{a.author.name}</td>
+                <td>{a.published}</td>
+              </tr>
+            ))}
         </tbody>
       </table>
-      {uniqueItems.map((g) => (
-        <button key={g} onClick={() => setGenre(g)}>
+      {genres.map((g) => (
+        <button key={g} onClick={() => onGenreClick(g)}>
           {g}
         </button>
       ))}
