@@ -1,6 +1,5 @@
 require("dotenv").config();
 const { ApolloServer, UserInputError, gql } = require("apollo-server");
-const { v1: uuid } = require("uuid");
 
 const mongoose = require("mongoose");
 const Book = require("./models/book");
@@ -72,7 +71,6 @@ const resolvers = {
     bookCount: () => Book.countDocuments(),
     allBooks: async (root, args) => {
       const query = {};
-      console.log(args);
       if (args.genre) {
         query.genres = { $in: [genre] };
       }
@@ -94,7 +92,6 @@ const resolvers = {
       let count = books.filter(
         (author) => String(author.author) === String(root.id)
       ).length;
-      console.log(root);
       if (!count) {
         count = 0;
       }
@@ -104,19 +101,28 @@ const resolvers = {
   Mutation: {
     addBook: async (root, { title, published, genres, author }) => {
       let book = new Book({ title, published, genres });
-
-      book.author = await findIt(author);
-      await book.save();
-
-      book = await Book.findById(book.id).populate("author");
+      try {
+        book.author = await findIt(author);
+        await book.save();
+        book = await Book.findById(book.id).populate("author");
+      } catch (error) {
+        throw new UserInputError(error.message, {
+          invalidArgs: error.path,
+        });
+      }
 
       return book;
     },
     editAuthor: async (root, { name, born }) => {
-      const author = await Author.findOne({ name });
-
-      author.born = born;
-      return author.save();
+      try {
+        const author = await Author.findOne({ name });
+        author.born = born;
+        await author.save();
+      } catch (error) {
+        throw new UserInputError(error.message, {
+          invalidArgs: args,
+        });
+      }
     },
   },
 };
