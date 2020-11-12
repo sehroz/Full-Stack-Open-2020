@@ -1,18 +1,20 @@
 import React, { useState } from "react";
 import { useMutation } from "@apollo/client";
 import Select from "react-select";
-import { EDIT_AUTHOR } from "../queries";
+import { EDIT_AUTHOR, ALL_AUTHORS } from "../queries";
 
 const AuthorForm = ({ authors }) => {
   const [name, setName] = useState("");
   const [born, setBorn] = useState("");
-  const [changeAuthor, result] = useMutation(EDIT_AUTHOR);
+  const [changeAuthor] = useMutation(EDIT_AUTHOR, {
+    refetchQueries: [{ query: ALL_AUTHORS }],
+  });
 
   const submit = (event) => {
     event.preventDefault();
 
     changeAuthor({
-      variables: { name: name.value, born: born == "" ? 0 : born },
+      variables: { name: name.value, born: born === "" ? 0 : born },
     });
 
     setBorn("");
