@@ -44,6 +44,23 @@ export const ADD_BOOK = gql`
   }
 `;
 
+export const BOOK_ADDED = gql`
+  subscription {
+    bookAdded {
+      title
+      author {
+        name
+        bookCount
+        born
+        id
+      }
+      genres
+      published
+      id
+    }
+  }
+`;
+
 export const ALL_AUTHORS = gql`
   query {
     allAuthors {

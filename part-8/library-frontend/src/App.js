@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Authors from "./components/Authors";
 import Books from "./components/Books";
 import NewBook from "./components/NewBook";
-import { useQuery } from "@apollo/client";
+import { useQuery, useSubscription, useApolloClient } from "@apollo/client";
 import { ALL_AUTHORS, ALL_BOOKS } from "./queries";
 import Login from "./components/Login";
 
@@ -27,6 +27,13 @@ const App = () => {
   if (authorData.loading || bookData.loading) {
     return <div>loading...</div>;
   }
+
+  useSubscription(BOOK_ADDED, {
+    onSubscriptionData: ({ subscriptionData }) => {
+      const book = subscriptionData.data.bookAdded;
+      alert("new book " + book.title + " by " + book.author.name);
+    },
+  });
 
   return (
     <div>
