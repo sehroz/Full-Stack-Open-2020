@@ -1,5 +1,5 @@
 require("dotenv").config();
-const { ApolloServer, UserInputError, gql } = require("apollo-server");
+const { ApolloServer, UserInputError, gql, PubSub } = require("apollo-server");
 
 const mongoose = require("mongoose");
 const Book = require("./models/book");
@@ -7,7 +7,7 @@ const Author = require("./models/author");
 const User = require("./models/user");
 const jwt = require("jsonwebtoken");
 const JWT_SECRET = "sehroz";
-
+const pubsub = new PubSub();
 const MONGODB_URI = `${process.env.MONGO_URI}`;
 mongoose
   .connect(MONGODB_URI, {
@@ -61,6 +61,10 @@ const typeDefs = gql`
 
     createUser(username: String!, favoriteGenre: String!): User
     login(username: String!, password: String!): Token
+  }
+
+  type Subscription {
+    bookAdded: Book!
   }
 
   type Query {
@@ -161,6 +165,7 @@ const resolvers = {
           invalidArgs: error.path,
         });
       }
+      pubsub.publish("BOOK_ADDED", { bookAdded: book });
 
       return book;
     },
@@ -178,6 +183,11 @@ const resolvers = {
           invalidArgs: args,
         });
       }
+    },
+  },
+  Subscription: {
+    bookAdded: {
+      subscribe: () => pubsub.asyncIterator(["BOOK_ADDED"]),
     },
   },
 };
