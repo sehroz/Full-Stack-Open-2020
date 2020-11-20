@@ -1,3 +1,19 @@
+interface Values {
+  vals: Array<number>;
+}
+
+const parseArgument = (args: Array<string>): Values => {
+  if (args.length < 1) throw new Error("Not enough");
+
+  if (!isNaN(Number(args[2])) && !isNaN(Number(args[3]))) {
+    return {
+      vals: args.map(Number).slice(2, args.length),
+    };
+  } else {
+    throw new Error("Provide numbers!");
+  }
+};
+
 interface DataLabel {
   periodLength: number;
   trainingDays: number;
@@ -8,24 +24,30 @@ interface DataLabel {
   average: number;
 }
 
-const excerciseCalculator = (
-  daily: Array<number>,
-  target: number
-): DataLabel => {
-  let totalHours = daily.reduce((a, b) => a + b, 0);
-  let days = daily.filter((d) => d !== 0).length;
-  let rate = totalHours == target ? 3 : totalHours == target * 0.5 ? 2 : 1;
+const excerciseCalculator = (values: Array<number>): DataLabel => {
+  let totalHours = values.reduce((a, b) => a + b, 0) - values[0];
+  let days = values.filter((d) => d !== 0).length - 1;
+  let rate =
+    totalHours >= values[0] ? 3 : totalHours == values[0] * 0.5 ? 2 : 1;
   let results = {
-    periodLength: daily.length,
+    periodLength: values.length - 1,
     trainingDays: days,
-    success: totalHours / days <= target ? false : true,
+    success: totalHours / values.length - 1 <= values[0] ? false : true,
     rating: rate,
     ratingDescription: rate === 3 ? "Perfect" : "Reengage",
-    target: target,
-    average: totalHours / daily.length,
+    target: values[0],
+    average: totalHours / (values.length - 1),
   };
+  console.log(totalHours);
+  console.log(days);
+  console.log(values[0]);
   return results;
 };
 
-const daily = [3, 0, 2, 4.5, 0, 3, 1];
-console.log(excerciseCalculator(daily, 2));
+try {
+  const { vals } = parseArgument(process.argv);
+
+  console.log(excerciseCalculator(vals));
+} catch (e) {
+  console.log("Error, something bad happened, message: ", e.message);
+}
