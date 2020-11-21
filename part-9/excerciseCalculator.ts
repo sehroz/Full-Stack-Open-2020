@@ -25,11 +25,11 @@ interface DataLabel {
 }
 
 const excerciseCalculator = (values: Array<number>): DataLabel => {
-  let totalHours = values.reduce((a, b) => a + b, 0) - values[0];
-  let days = values.filter((d) => d !== 0).length - 1;
-  let rate =
+  const totalHours = values.reduce((a, b) => a + b, 0) - values[0];
+  const days = values.filter((d) => d !== 0).length - 1;
+  const rate =
     totalHours >= values[0] ? 3 : totalHours == values[0] * 0.5 ? 2 : 1;
-  let results = {
+  const results = {
     periodLength: values.length - 1,
     trainingDays: days,
     success: totalHours / values.length - 1 <= values[0] ? false : true,
@@ -49,5 +49,5 @@ try {
 
   console.log(excerciseCalculator(vals));
 } catch (e) {
-  console.log("Error, something bad happened, message: ", e.message);
+  console.log("Error, something bad happened, message: ", e);
 }

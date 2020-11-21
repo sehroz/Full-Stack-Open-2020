@@ -1,6 +1,6 @@
 import express from "express";
 
-const calculateBmi = require("./calculateBmi.ts");
+import calculateBmi from "./calculateBmi";
 
 const app = express();
 
@@ -19,7 +19,10 @@ app.get("/bmi", (req, res) => {
     const WebBmi = {
       weight: req.query["weight"],
       height: req.query["height"],
-      bmi: calculateBmi(req.query["height"], req.query["weight"]),
+      bmi: calculateBmi(
+        Number(req.query["height"]),
+        Number(req.query["weight"])
+      ),
     };
     res.json(WebBmi);
   } else {
