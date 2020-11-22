@@ -1,53 +1,54 @@
-interface Values {
-  vals: Array<number>;
-}
+// interface Values {
+//   vals: Array<number>;
+// }
 
-const parseArgument = (args: Array<string>): Values => {
-  if (args.length < 1) throw new Error("Not enough");
+// const parseArgument = (args: Array<string>): Values => {
+//   if (args.length < 1) throw new Error("Not enough");
 
-  if (!isNaN(Number(args[2])) && !isNaN(Number(args[3]))) {
-    return {
-      vals: args.map(Number).slice(2, args.length),
-    };
-  } else {
-    throw new Error("Provide numbers!");
-  }
-};
+//   if (!isNaN(Number(args[2])) && !isNaN(Number(args[3]))) {
+//     return {
+//       vals: args.map(Number).slice(2, args.length),
+//     };
+//   } else {
+//     throw new Error("Provide numbers!");
+//   }
+// };
 
 interface DataLabel {
-  periodLength: number;
-  trainingDays: number;
-  success: boolean;
-  rating: number;
-  ratingDescription: string;
-  target: number;
-  average: number;
+  periodLength: number
+  trainingDays: number
+  success: boolean
+  rating: number
+  ratingDescription: string
+  target: number
+  average: number
 }
 
-const excerciseCalculator = (values: Array<number>): DataLabel => {
-  const totalHours = values.reduce((a, b) => a + b, 0) - values[0];
-  const days = values.filter((d) => d !== 0).length - 1;
+const excerciseCalculator = (
+  values: Array<number>,
+  target: number
+): DataLabel => {
+  const data = values
+  console.log(data)
+  const totalHours = data.reduce((a, b) => a + b, 0)
+  const days = data.filter((d) => d !== 0).length
   const rate =
-    totalHours >= values[0] ? 3 : totalHours == values[0] * 0.5 ? 2 : 1;
+    totalHours / values.length >= target
+      ? 3
+      : totalHours == target * 0.5
+      ? 2
+      : 1
   const results = {
-    periodLength: values.length - 1,
+    periodLength: data.length,
     trainingDays: days,
-    success: totalHours / values.length - 1 <= values[0] ? false : true,
+    success: totalHours / data.length <= target ? false : true,
     rating: rate,
     ratingDescription: rate === 3 ? "Perfect" : "Reengage",
-    target: values[0],
-    average: totalHours / (values.length - 1),
-  };
-  console.log(totalHours);
-  console.log(days);
-  console.log(values[0]);
-  return results;
-};
+    target: target,
+    average: totalHours / data.length,
+  }
 
-try {
-  const { vals } = parseArgument(process.argv);
-
-  console.log(excerciseCalculator(vals));
-} catch (e) {
-  console.log("Error, something bad happened, message: ", e);
+  return results
 }
+
+export = excerciseCalculator
