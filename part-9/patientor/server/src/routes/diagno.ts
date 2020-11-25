@@ -1,9 +1,9 @@
 import express from "express";
-import diaService from "../services/allService";
+import allService from "../services/allService";
 const router = express.Router();
 
 router.get("/", (_req, res) => {
-  res.send(diaService.getDia());
+  res.send(allService.getDia());
 });
 
 export default router;

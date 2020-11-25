@@ -1,7 +1,11 @@
 import dias from "../data/diagnoses";
-import pats from "../data/patients.json";
-import { DiaEntry } from "../type";
-import { NonSensitivePatsEntry } from "../type";
+import pats from "../data/patients";
+import {
+  DiaEntry,
+  PatEntry,
+  NewPatEntry,
+  NonSensitivePatsEntry,
+} from "../type";
 
 const getDia = (): Array<DiaEntry> => {
   return dias;
@@ -17,7 +21,17 @@ const getNonSenPats = (): Array<NonSensitivePatsEntry> => {
   }));
 };
 
+const addEntry = (entry: NewPatEntry): PatEntry => {
+  const newPatEntry = {
+    id: (pats.length + 1).toString(),
+    ...entry,
+  };
+  pats.push(newPatEntry);
+  return newPatEntry;
+};
+
 export default {
   getDia,
   getNonSenPats,
+  addEntry,
 };
