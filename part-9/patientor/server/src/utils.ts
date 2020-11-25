@@ -1,16 +1,27 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { NewPatEntry } from "./type";
+import { NewPatEntry, Gend } from "./type";
 
 const toNewPatEntry = (object: any): NewPatEntry => {
   return {
     dateOfBirth: parseDate(object.dateOfBirth),
     name: parseT(object.name),
     ssn: parseT(object.ssn),
-    gender: parseT(object.gender),
+    gender: parseGend(object.gender),
     occupation: parseT(object.occupation),
   };
+};
+
+const isGend = (param: any): param is Gend => {
+  return Object.values(Gend).includes(param);
+};
+
+const parseGend = (gend: any): Gend => {
+  if (!gend || !isGend(gend)) {
+    throw new Error("Incorrect or missing gender");
+  }
+  return gend;
 };
 
 const parseT = (comment: any): string => {

@@ -16,3 +16,9 @@ export interface PatEntry {
 export type NonSensitivePatsEntry = Omit<PatEntry, "ssn">;
 
 export type NewPatEntry = Omit<PatEntry, "id">;
+
+export enum Gend {
+  Male = "male",
+  Female = "female",
+  Other = "other",
+}
